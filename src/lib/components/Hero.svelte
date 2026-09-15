@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { SITE, HERO_STATS } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import HeroBackground from '$lib/components/hero/HeroBackground.svelte';
 	import HeroPortraitStage from '$lib/components/hero/HeroPortraitStage.svelte';
 	import HeroRoleRotator from '$lib/components/hero/HeroRoleRotator.svelte';
@@ -115,20 +116,20 @@
 				style="color: var(--text-muted);"
 			>
 				<span class="h-px w-10 bg-gradient-to-r from-[var(--accent-gold)]/60 to-transparent"></span>
-				{SITE.location}
+				{contentState.site.location}
 			</p>
 
 			<div class="hero-cinematic-line mb-6" aria-hidden="true"></div>
 
 			<h1 class="hero-headline display-heading">
 				<span class="block">
-					{#each SITE.nameLine1.split('') as letter}
+					{#each contentState.site.nameLine1.split('') as letter}
 						<span data-hero-letter>{letter === ' ' ? '\u00a0' : letter}</span>
 					{/each}
 				</span>
 				<br />
 				<span class="block">
-					{#each SITE.nameLine2.split('') as letter}
+					{#each contentState.site.nameLine2.split('') as letter}
 						<span data-hero-letter>{letter}</span>
 					{/each}
 				</span>
@@ -140,7 +141,7 @@
 			</p>
 
 			<p data-hero-tagline class="mt-5 max-w-lg text-base leading-relaxed text-balance md:text-lg hero-tagline">
-				{SITE.brand}
+				{contentState.site.brand}
 			</p>
 
 			<div class="hero-stat-grid mt-8 lg:max-w-md">

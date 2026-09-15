@@ -93,6 +93,8 @@ async function handleAnalytics(
 			page_path: body.page_path ?? body.path ?? null,
 			section_id: body.section_id ?? body.section ?? null,
 			metadata: body.metadata ?? {},
+					session_id: body.session_id ?? null,
+					duration_ms: Number.isFinite(body.duration_ms) ? body.duration_ms : null,
 			ip_address: getClientAddress(),
 			user_agent: request.headers.get('user-agent')
 		});

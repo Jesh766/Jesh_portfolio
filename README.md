@@ -21,6 +21,8 @@ Replace `static/resume.pdf` with your resume.
 | `PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role (server only) |
+| `ADMIN_PASSWORD` | Password for `/admin` (server only) |
+| `ADMIN_SESSION_SECRET` | Long random secret used to sign the admin session cookie |
 | `RESEND_API_KEY` | Optional — contact email via Resend |
 | `CONTACT_FROM_EMAIL` | Verified Resend sender |
 | `CONTACT_TO_EMAIL` | Inbox for contact notifications |
@@ -28,8 +30,12 @@ Replace `static/resume.pdf` with your resume.
 ## Supabase
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. Run `supabase/migrations/001_initial.sql` in the SQL editor.
+2. Run `supabase/migrations/001_initial.sql` and then `supabase/migrations/002_admin_content.sql` in the SQL editor.
 3. Add env vars to `.env` and Vercel.
+
+### Admin workspace
+
+Open `/admin` after deployment. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the server environment before signing in. The dashboard stores editable content in the `portfolio_content` table and shows anonymous session, page-view, section-view, duration, and coarse cursor-grid telemetry. It does not store raw cursor trails or expose visitor IP addresses in the dashboard.
 
 Tables: `contact_submissions`, `analytics_events`, `resume_downloads`.
 

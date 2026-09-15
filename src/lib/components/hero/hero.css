@@ -182,5 +182,38 @@
 /* ── Mobile portrait ──────────────────────────────────── */
 .hero-mobile-portrait {
 	width: min(72vw, 240px);
+	aspect-ratio: 4 / 5;
 	flex-shrink: 0;
+}
+
+.hero-mobile-portrait .hero-stage {
+	height: 100%;
+}
+
+/* ── Cursor portrait reveal ──────────────────────────── */
+.hero-portrait-reveal {
+	filter: saturate(1.08) contrast(1.04);
+	transition: opacity 0.5s ease;
+	-webkit-mask-image: radial-gradient(
+		circle at var(--reveal-x, 50%) var(--reveal-y, 38%),
+		rgba(0, 0, 0, 1) 0%,
+		rgba(0, 0, 0, 0.85) calc(var(--reveal-r, 0%) * 0.6),
+		rgba(0, 0, 0, 0) var(--reveal-r, 0%)
+	);
+	mask-image: radial-gradient(
+		circle at var(--reveal-x, 50%) var(--reveal-y, 38%),
+		rgba(0, 0, 0, 1) 0%,
+		rgba(0, 0, 0, 0.85) calc(var(--reveal-r, 0%) * 0.6),
+		rgba(0, 0, 0, 0) var(--reveal-r, 0%)
+	);
+}
+
+.hero-glass-rim {
+	background: radial-gradient(
+		circle at var(--reveal-x, 50%) var(--reveal-y, 38%),
+		transparent calc(var(--reveal-r, 0%) * 0.9),
+		rgba(201, 168, 76, 0.35) var(--reveal-r, 0%),
+		transparent calc(var(--reveal-r, 0%) + 3%)
+	);
+	mix-blend-mode: screen;
 }

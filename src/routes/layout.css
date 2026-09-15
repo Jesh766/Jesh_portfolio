@@ -370,9 +370,13 @@
     max-width: 100% !important;
   }
 
-  /* Hide portrait on small screens — left col fills width */
-  .hero-stage {
-    display: none;
+  /* Keep the dedicated mobile portrait visible while preserving the desktop stage rule. */
+  .hero-mobile-portrait .hero-stage {
+    display: block;
+  }
+
+  .hero-mobile-portrait .hero-portrait-img {
+    opacity: 1;
   }
 
   /* Stat grid — reduce value font + padding */

@@ -9,13 +9,17 @@
 	import ScrollProgress from '$lib/components/global/ScrollProgress.svelte';
 	import ScrollInit from '$lib/components/global/ScrollInit.svelte';
 	import AvailableForWork from '$lib/components/global/AvailableForWork.svelte';
-	import { observeSections, trackEvent } from '$lib/utils/analytics';
+		import { observeSections, startCursorSampling, startSessionTracking, trackEvent } from '$lib/utils/analytics';
 	import { SITE } from '$lib/data/site';
+		import { loadPublishedContent } from '$lib/stores/content.svelte';
 
 	let { children } = $props();
 
 	onMount(() => {
+				void loadPublishedContent();
 		trackEvent({ event_type: 'page_view', path: window.location.pathname });
+				const stopSessionTracking = startSessionTracking();
+				const stopCursorSampling = startCursorSampling();
 
 		const cleanupSections = observeSections(
 			['about', 'skills', 'projects', 'certifications', 'achievements', 'contact'],
@@ -65,6 +69,8 @@
 
 		return () => {
 			cleanupSections();
+						stopSessionTracking();
+						stopCursorSampling();
 			lenisDestroy?.();
 		};
 	});
