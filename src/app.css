@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+@theme {
+	--font-display: 'Cormorant Garamond', Georgia, serif;
+	--font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+@layer base {
+	html {
+		scroll-behavior: auto;
+		background: var(--bg-primary);
+	}
+
+	html.lenis,
+	html.lenis body {
+		height: auto;
+	}
+
+	.lenis.lenis-smooth {
+		scroll-behavior: auto !important;
+	}
+
+	body {
+		font-family: var(--font-body);
+		background: var(--bg-primary);
+		color: var(--text-primary);
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+
+	::selection {
+		background: color-mix(in srgb, var(--accent-gold) 45%, transparent);
+		color: var(--text-primary);
+	}
+}
