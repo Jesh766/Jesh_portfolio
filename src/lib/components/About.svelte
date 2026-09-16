@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { TIMELINE } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import SectionHeader from '$lib/components/ui/SectionHeader.svelte';
@@ -12,6 +13,7 @@
 	import AboutCurrentFocus from '$lib/components/about/AboutCurrentFocus.svelte';
 
 	let timelinePath = $state<SVGPathElement | undefined>(undefined);
+	const journey = $derived(contentState.journey.length ? contentState.journey : TIMELINE);
 
 	onMount(() => {
 		void (async () => {
@@ -84,7 +86,7 @@
 			description="From university foundations to creative technology—crafting experiences where design, AI, and engineering meet with intention."
 		/>
 
-		<p class="status-available relative z-[1] mt-6">
+		<p class="status-available relative z-[1] mt-6" data-editable="site.availability">
 			<span class="status-available__dot" aria-hidden="true"></span>
 			Available for opportunities
 		</p>
@@ -122,15 +124,15 @@
 				></div>
 
 				<ol class="relative space-y-0 pl-10 md:pl-14">
-					{#each TIMELINE as item}
+					{#each journey as item, i}
 						<li data-timeline-item class="relative pb-14 last:pb-0">
 							<span
 								data-timeline-dot
 								class="absolute top-1.5 -left-[calc(2.5rem-4px)] h-2.5 w-2.5 rounded-full bg-[var(--accent-gold)] ring-4 ring-[var(--bg-secondary)] md:-left-[calc(3.5rem-4px)]"
 							></span>
-							<p class="font-mono text-xs tracking-widest text-[var(--accent-gold)]">{item.year}</p>
-							<h3 class="mt-2 font-display text-2xl" style="color: var(--text-primary);">{item.title}</h3>
-							<p class="mt-3 max-w-xl leading-relaxed" style="color: var(--text-secondary);">
+							<p class="font-mono text-xs tracking-widest text-[var(--accent-gold)]" data-editable={`journey.${i}.year`}>{item.year}</p>
+							<h3 class="mt-2 font-display text-2xl" data-editable={`journey.${i}.title`} style="color: var(--text-primary);">{item.title}</h3>
+							<p class="mt-3 max-w-xl leading-relaxed" data-editable={`journey.${i}.description`} style="color: var(--text-secondary);">
 								{item.description}
 							</p>
 						</li>

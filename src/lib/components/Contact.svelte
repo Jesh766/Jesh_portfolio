@@ -3,6 +3,7 @@
 	import gsap from 'gsap';
 	import emailjs from '@emailjs/browser';
 	import { SITE } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
 	import ContactSocialConnect from '$lib/components/contact/ContactSocialConnect.svelte';
 	import { revealSectionHeaders } from '$lib/utils/scrollReveal';
@@ -181,26 +182,28 @@
 
 	<div class="relative z-[1] mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:items-start">
 		<div data-section-header>
-			<p class="text-xs tracking-[0.4em] uppercase" style="color: var(--text-muted);">Contact</p>
-			<h2 class="display-heading mt-4 text-3xl sm:text-4xl md:text-5xl">Let's build something remarkable</h2>
+			<p class="text-xs tracking-[0.4em] uppercase" style="color: var(--text-muted);" data-editable="site.contactLabel">Contact</p>
+			<h2 class="display-heading mt-4 text-3xl sm:text-4xl md:text-5xl" data-editable="site.contactHeading">Let's build something remarkable</h2>
 			<ul class="mt-10 space-y-4" style="color: var(--text-secondary);" data-contact-details>
 				<li>
 					<a
-						href="mailto:{SITE.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
+						href="mailto:{contentState.contact.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
 						data-cursor-hover
 						data-cursor-link
-						class="transition hover:text-[var(--accent-gold)]">{SITE.email}</a
+						class="transition hover:text-[var(--accent-gold)]"
+						data-editable="contact.email">{contentState.contact.email}</a
 					>
 				</li>
 				<li>
 					<a
-						href="tel:{SITE.phone.replace(/\s/g, '')}"
+						href="tel:{contentState.contact.phone.replace(/\s/g, '')}"
 						data-cursor-hover
 						data-cursor-link
-						class="transition hover:text-[var(--accent-gold)]">{SITE.phone}</a
+						class="transition hover:text-[var(--accent-gold)]"
+						data-editable="contact.phone">{contentState.contact.phone}</a
 					>
 				</li>
-				<li>{SITE.location}</li>
+				<li data-editable="site.location">{SITE.location}</li>
 			</ul>
 
 			<ContactSocialConnect />

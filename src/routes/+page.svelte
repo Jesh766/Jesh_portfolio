@@ -7,6 +7,7 @@
 	import Achievements from '$lib/components/Achievements.svelte';
 	import Contact from '$lib/components/Contact.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import PortfolioEditor from '$lib/components/PortfolioEditor.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -36,3 +37,4 @@
 <Achievements />
 <Contact />
 <Footer />
+<PortfolioEditor />

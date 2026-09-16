@@ -112,6 +112,7 @@
 		<div bind:this={leftCol} class="flex flex-col justify-center md:pr-4 lg:pr-8">
 			<p
 				data-hero-eyebrow
+				data-editable="site.location"
 				class="mb-6 flex items-center gap-3 text-[10px] tracking-[0.45em] uppercase"
 				style="color: var(--text-muted);"
 			>
@@ -122,13 +123,13 @@
 			<div class="hero-cinematic-line mb-6" aria-hidden="true"></div>
 
 			<h1 class="hero-headline display-heading">
-				<span class="block">
+				<span class="block" data-editable="site.nameLine1">
 					{#each contentState.site.nameLine1.split('') as letter}
 						<span data-hero-letter>{letter === ' ' ? '\u00a0' : letter}</span>
 					{/each}
 				</span>
 				<br />
-				<span class="block">
+				<span class="block" data-editable="site.nameLine2">
 					{#each contentState.site.nameLine2.split('') as letter}
 						<span data-hero-letter>{letter}</span>
 					{/each}
@@ -140,7 +141,7 @@
 				<HeroRoleRotator />
 			</p>
 
-			<p data-hero-tagline class="mt-5 max-w-lg text-base leading-relaxed text-balance md:text-lg hero-tagline">
+			<p data-hero-tagline data-editable="site.brand" class="mt-5 max-w-lg text-base leading-relaxed text-balance md:text-lg hero-tagline">
 				{contentState.site.brand}
 			</p>
 

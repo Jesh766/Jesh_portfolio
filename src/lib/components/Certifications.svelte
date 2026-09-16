@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { CERTIFICATIONS } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import SectionHeader from '$lib/components/ui/SectionHeader.svelte';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
 	import { revealSectionHeaders } from '$lib/utils/scrollReveal';
+
+	const certifications = $derived(contentState.certifications.length ? contentState.certifications : CERTIFICATIONS);
 
 	onMount(async () => {
 		await revealSectionHeaders();
@@ -37,7 +40,7 @@
 		<SectionHeader eyebrow="Certifications" title="Credentials" />
 
 		<div class="mt-14 grid gap-5 sm:gap-6 md:grid-cols-2">
-			{#each CERTIFICATIONS as cert, i}
+			{#each certifications as cert, i}
 				<a
 					data-cert-card
 					href={cert.url}
@@ -87,13 +90,13 @@
 						<span class="cert-year-pill flex-shrink-0">{cert.year}</span>
 					</div>
 
-					<h3 class="relative mt-5 text-xl font-semibold leading-snug" style="color: var(--text-primary);">
+					<h3 class="relative mt-5 text-xl font-semibold leading-snug" data-editable={`certifications.${i}.title`} style="color: var(--text-primary);">
 						{cert.title}
 					</h3>
-					<p class="relative mt-1.5 text-sm" style="color: var(--text-secondary);">{cert.issuer}</p>
+					<p class="relative mt-1.5 text-sm" data-editable={`certifications.${i}.issuer`} style="color: var(--text-secondary);">{cert.issuer}</p>
 
 					{#if cert.note}
-						<p class="relative mt-2 text-xs leading-relaxed" style="color: var(--text-muted);">{cert.note}</p>
+						<p class="relative mt-2 text-xs leading-relaxed" data-editable={`certifications.${i}.note`} style="color: var(--text-muted);">{cert.note}</p>
 					{/if}
 
 					<span

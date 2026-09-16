@@ -35,7 +35,7 @@ Replace `static/resume.pdf` with your resume.
 
 ### Admin workspace
 
-Open `/admin` after deployment. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the server environment before signing in. The dashboard stores editable content in the `portfolio_content` table and shows anonymous session, page-view, section-view, duration, and coarse cursor-grid telemetry. It does not store raw cursor trails or expose visitor IP addresses in the dashboard.
+Open `/admin` after deployment. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the server environment before signing in. The dashboard provides a visual editor for site identity, hero copy, and repeatable projects, with private drafts and an explicit publish action. Content is stored in the `portfolio_content` table and the dashboard shows anonymous session, page-view, section-view, duration, and coarse cursor-grid telemetry. It does not store raw cursor trails or expose visitor IP addresses in the dashboard.
 
 Tables: `contact_submissions`, `analytics_events`, `resume_downloads`.
 

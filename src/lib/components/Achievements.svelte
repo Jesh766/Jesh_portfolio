@@ -1,46 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
+	import { ACHIEVEMENTS } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
 	import { revealSectionHeaders } from '$lib/utils/scrollReveal';
 
-	const milestones = [
-		{
-			year: '2025',
-			icon: '⚡',
-			title: 'Started Full-Stack Development Journey',
-			body: 'Began building real-world web applications using HTML, CSS, JavaScript, and React — moving from theory to shipping actual products.',
-			accent: 'var(--accent-gold)'
-		},
-		{
-			year: '2025',
-			icon: '🏅',
-			title: 'Earned AI Certifications',
-			body: 'Validated AI skills through Anthropic, Google, Be10x, and Deloitte × Forage — covering LLMs, prompt engineering, generative AI, and applied data analytics.',
-			accent: 'var(--accent-purple)'
-		},
-		{
-			year: '2026',
-			icon: '🏆',
-			title: 'Competed at SBS Hack The Gap',
-			body: 'Led Team "The 5th Element" at a national hackathon — took an idea from whiteboard to working demo in 24 hours under real competition pressure.',
-			accent: 'var(--accent-teal)'
-		},
-		{
-			year: '2026',
-			icon: '🌾',
-			title: 'Built FarmSathi — AgriTech Platform',
-			body: 'Co-built a token-based equipment and labour sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
-			accent: 'var(--accent-gold)'
-		},
-		{
-			year: 'Now',
-			icon: '🚀',
-			title: 'Seeking Internships & Building AI Applications',
-			body: 'Actively applying for internship opportunities while building AI-powered tools and expanding the project portfolio with real, deployable applications.',
-			accent: 'var(--accent-purple)'
-		}
-	];
+	const milestones = $derived(contentState.achievements.length ? contentState.achievements : ACHIEVEMENTS);
 
 	onMount(async () => {
 		await revealSectionHeaders();
@@ -71,10 +37,10 @@
 		<div data-section-header>
 			<p class="flex items-center gap-3 text-xs tracking-[0.4em] uppercase" style="color: var(--text-muted);">
 				<span class="h-px w-6 bg-gradient-to-r from-[var(--accent-gold)]/60 to-transparent" aria-hidden="true"></span>
-				Journey
+				<span data-editable="site.journeyTag">Journey</span>
 			</p>
-			<h2 class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl">Journey so far</h2>
-			<p class="mt-4 max-w-xl text-base leading-relaxed" style="color: var(--text-secondary);">
+			<h2 class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.journeyTitle">Journey so far</h2>
+			<p class="mt-4 max-w-xl text-base leading-relaxed" data-editable="site.journeyIntro" style="color: var(--text-secondary);">
 				From first line of code to building AI-powered products — here's the path.
 			</p>
 		</div>
@@ -99,11 +65,11 @@
 						style="background: rgba(12,12,14,0.5); border: 1px solid var(--border-subtle); backdrop-filter: blur(12px);"
 					>
 						<div class="flex flex-wrap items-center gap-3 mb-3">
-							<span class="journey-year-pill" style="color: {milestone.accent}; border-color: {milestone.accent};">{milestone.year}</span>
+							<span class="journey-year-pill" data-editable={`achievements.${i}.year`} style="color: {milestone.accent}; border-color: {milestone.accent};">{milestone.year}</span>
 							<span class="text-xl" aria-hidden="true">{milestone.icon}</span>
 						</div>
-						<h3 class="text-lg font-semibold leading-snug" style="color: var(--text-primary);">{milestone.title}</h3>
-						<p class="mt-2 text-sm leading-relaxed" style="color: var(--text-secondary);">{milestone.body}</p>
+						<h3 class="text-lg font-semibold leading-snug" data-editable={`achievements.${i}.title`} style="color: var(--text-primary);">{milestone.title}</h3>
+						<p class="mt-2 text-sm leading-relaxed" data-editable={`achievements.${i}.description`} style="color: var(--text-secondary);">{milestone.body}</p>
 					</div>
 				</div>
 			{/each}

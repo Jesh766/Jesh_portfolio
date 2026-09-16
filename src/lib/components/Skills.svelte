@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { SKILLS_CATEGORIZED } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import SkillUniverse from '$lib/components/skills/SkillUniverse.svelte';
 	import SectionHeader from '$lib/components/ui/SectionHeader.svelte';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
@@ -24,6 +25,7 @@
 		{ name: 'Git', note: 'Version control' },
 		{ name: 'Tailwind CSS', note: 'Styling' },
 	];
+	const skills = $derived(contentState.skills.length ? contentState.skills : SKILLS_CATEGORIZED);
 
 	onMount(() => {
 		revealSectionHeaders();
@@ -45,7 +47,7 @@
 
 		<!-- Categorized Skills Grid -->
 		<div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-			{#each SKILLS_CATEGORIZED as cat, ci}
+			{#each skills as cat, ci}
 				<div
 					data-skill-category
 					class="skill-category-card rounded-2xl p-5 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-[var(--glow-gold)]"

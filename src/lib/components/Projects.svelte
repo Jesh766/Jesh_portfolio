@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { FARMSATHI } from '$lib/data/site';
+	import { FARMSATHI, PROJECTS } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
@@ -15,6 +16,8 @@
 		{ value: '1', label: 'Flagship product' },
 		{ value: '∞', label: 'Farmer potential' }
 	];
+	const projects = $derived(contentState.projects.length ? contentState.projects : PROJECTS);
+	const featuredProject = $derived(projects[0] ?? PROJECTS[0]);
 
 	onMount(async () => {
 		await revealSectionHeaders();
@@ -62,10 +65,10 @@
 				style="color: var(--text-muted);"
 			>
 				<span class="h-px w-6 bg-gradient-to-r from-[var(--accent-gold)]/60 to-transparent" aria-hidden="true"></span>
-				Projects
+				<span data-editable="site.projectsLabel">Projects</span>
 			</p>
-			<h2 data-display-heading class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl">Featured work</h2>
-			<p class="mt-4 max-w-xl text-base leading-relaxed" style="color: var(--text-secondary);">
+			<h2 data-display-heading class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.projectsHeading">Featured work</h2>
+			<p class="mt-4 max-w-xl text-base leading-relaxed" data-editable="site.projectsIntro" style="color: var(--text-secondary);">
 				Real projects with real code. Every card links to GitHub.
 			</p>
 		</div>
@@ -82,21 +85,21 @@
 				></div>
 				<div class="relative">
 					<div class="flex flex-wrap items-center gap-3">
-						<p class="text-xs tracking-[0.35em] uppercase text-[var(--accent-gold)]">Case study · Featured</p>
-						<span class="cert-year-pill">Hackathon 2024</span>
+						<p class="text-xs tracking-[0.35em] uppercase text-[var(--accent-gold)]" data-editable="projects.0.status">Case study · Featured</p>
+						<span class="cert-year-pill" data-editable="projects.0.year">Hackathon 2024</span>
 					</div>
-					<h3 class="display-heading mt-3 text-3xl sm:text-4xl md:text-5xl">{FARMSATHI.title}</h3>
-					<p class="mt-4 max-w-2xl text-lg leading-relaxed" style="color: var(--text-secondary);">
-						{FARMSATHI.tagline}
+					<h3 class="display-heading mt-3 text-3xl sm:text-4xl md:text-5xl" data-editable="projects.0.title">{featuredProject.title}</h3>
+					<p class="mt-4 max-w-2xl text-lg leading-relaxed" data-editable="projects.0.tagline" style="color: var(--text-secondary);">
+						{featuredProject.tagline}
 					</p>
 					<div class="mt-4 flex flex-wrap gap-2">
-						{#each tags as tag}
-							<span class="project-tag-pill">{tag}</span>
+						{#each featuredProject.tags ?? tags as tag, tagIndex}
+								<span class="project-tag-pill" data-editable={`projects.0.tags.${tagIndex}`}>{tag}</span>
 						{/each}
 					</div>
 					<div class="mt-6 flex flex-wrap gap-3">
 						<a
-							href="https://github.com/Jesh766"
+							href={featuredProject.github || '#'}
 							target="_blank"
 							rel="noopener noreferrer"
 							class="project-link-btn project-link-btn--github"
