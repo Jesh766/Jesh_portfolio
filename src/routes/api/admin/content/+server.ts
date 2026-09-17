@@ -26,8 +26,13 @@ export const PUT: RequestHandler = async ({ cookies, request }) => {
 	const action = body.action === 'publish' ? 'publish' : 'draft';
 	const supabase = getSupabaseAdmin();
 	if (!supabase) return json({ error: 'Supabase is not configured.' }, { status: 503 });
-	const values = action === 'publish'
-		? { id: 'default', content: body.content, draft_content: null as unknown, updated_at: new Date().toISOString() }
+	const values: {
+		id: string;
+		content?: unknown;
+		draft_content?: unknown;
+		updated_at: string;
+	} = action === 'publish'
+		? { id: 'default', content: body.content, draft_content: null, updated_at: new Date().toISOString() }
 		: { id: 'default', draft_content: body.content, updated_at: new Date().toISOString() };
 	const { data, error } = await supabase
 		.from('portfolio_content')

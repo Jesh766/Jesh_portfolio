@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { prefersReducedMotion } from '$lib/utils/motion';
-	import AboutAICoreScene from './AboutAICoreScene.svelte';
+	import AboutAICoreScene from './about/AboutAICoreScene.svelte';
 
 	let wrap: HTMLDivElement;
 	let mouse = $state({ x: 0, y: 0 });

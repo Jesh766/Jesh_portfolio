@@ -4,7 +4,7 @@
 
 	let dot: HTMLDivElement;
 	let ring: HTMLDivElement;
-	let label: HTMLSpanElement;
+	let label = $state<HTMLSpanElement | null>(null);
 	let trail: HTMLDivElement;
 	let visible = $state(false);
 	let labelText = $state('');

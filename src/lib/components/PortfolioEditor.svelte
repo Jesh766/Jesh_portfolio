@@ -102,15 +102,27 @@
 		}
 	}
 
+	async function verifyAdminSession() {
+		try {
+			const response = await fetch('/api/admin', { method: 'GET' });
+			if (!response.ok) return false;
+			const payload = await response.json().catch(() => ({ authenticated: false }));
+			return Boolean(payload.authenticated);
+		} catch {
+			return false;
+		}
+	}
+
 	onMount(() => {
-		const sync = () => {
+		const sync = async () => {
 			const params = new URLSearchParams(window.location.search);
 			if (params.get('editor') !== '1') {
 				enabled = false;
 				status = 'Editor inactive';
 				return;
 			}
-			if (!document.cookie.includes('portfolio_admin_session=')) {
+			const authed = await verifyAdminSession();
+			if (!authed) {
 				window.location.href = '/admin';
 				return;
 			}
@@ -119,7 +131,7 @@
 			syncModeState();
 		};
 
-		sync();
+		void sync();
 		const observer = new MutationObserver(() => syncModeState());
 		observer.observe(document.body, { childList: true, subtree: true });
 		window.addEventListener('popstate', sync);

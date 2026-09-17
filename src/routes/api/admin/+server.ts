@@ -1,7 +1,11 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { adminCookieOptions, ADMIN_COOKIE, createAdminSession, isAdminConfigured, verifyAdminPassword } from '$lib/server/admin';
+import { adminCookieOptions, ADMIN_COOKIE, createAdminSession, isAdminConfigured, isAdminSession, verifyAdminPassword } from '$lib/server/admin';
 
 export const prerender = false;
+
+export const GET: RequestHandler = ({ cookies }) => {
+	return json({ authenticated: isAdminSession(cookies.get(ADMIN_COOKIE)) });
+};
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const body = await request.json().catch(() => ({}));

@@ -1,4 +1,22 @@
-export const SITE = {
+export type SiteConfig = {
+	name: string;
+	nameLine1: string;
+	nameLine2: string;
+	title: string;
+	location: string;
+	email: string;
+	phone: string;
+	linkedin: string;
+	github: string;
+	instagram: string;
+	whatsapp: string;
+	brand: string;
+	url: string;
+	portrait: string;
+	resume: string;
+};
+
+export const SITE: SiteConfig = {
 	name: 'JAYSHIL THAKKAR',
 	nameLine1: 'JAYSHIL',
 	nameLine2: 'THAKKAR',
@@ -15,7 +33,7 @@ export const SITE = {
 	url: 'https://jayshilthakkar.com',
 	portrait: '/images/jayshil-portrait.png',
 	resume: '/resume.pdf'
-} as const;
+};
 
 export const SOCIAL_LINKS = [
 	{ label: 'LinkedIn', href: SITE.linkedin, icon: 'linkedin' as const },
@@ -31,12 +49,19 @@ export const HERO_ROLES = [
 	'Problem Solver'
 ] as const;
 
-export const HERO_STATS = [
+export type HeroStat = {
+	value: number;
+	suffix: string;
+	label: string;
+	display?: string;
+};
+
+export const HERO_STATS: HeroStat[] = [
 	{ value: 4, suffix: '+', label: 'AI Certifications' },
 	{ value: 1, suffix: '', label: 'Hackathon Competed' },
 	{ value: 6, suffix: '+', label: 'Languages & Frameworks' },
 	{ value: 2, suffix: '+', label: 'Years of Learning' }
-] as const;
+];
 
 export const HERO_FLOATING_CARDS = [
 	{ title: 'AI Certifications', position: 'top-left' as const, delay: 0, floatDuration: 4.2 },
@@ -86,7 +111,51 @@ export const NAV = [
 
 export const NAV_CONTACT = { id: 'contact', label: 'Contact' } as const;
 
-export const TIMELINE = [
+export type TimelineEntry = {
+	year: string;
+	title: string;
+	description: string;
+};
+
+export type SkillCategory = {
+	category: string;
+	icon: string;
+	color: string;
+	items: string[];
+};
+
+export type Certification = {
+	title: string;
+	issuer: string;
+	issuerKey: 'anthropic' | 'be10x' | 'deloitte' | 'google';
+	url: string;
+	year: string;
+	note?: string;
+};
+
+export type Achievement = {
+	title: string;
+	description: string;
+	body?: string;
+	year?: string;
+	icon?: string;
+	accent?: string;
+};
+
+export type Project = {
+	id: string;
+	title: string;
+	tagline: string;
+	tags: string[];
+	status: string;
+	year: string;
+	github: string;
+	demo: string;
+	metrics: Array<{ value: string; label: string }>;
+	featured: boolean;
+};
+
+export const TIMELINE: TimelineEntry[] = [
 	{
 		year: '2022',
 		title: 'GLS University',
@@ -119,7 +188,7 @@ export const TIMELINE = [
 	}
 ] as const;
 
-export const SKILLS_CATEGORIZED = [
+export const SKILLS_CATEGORIZED: SkillCategory[] = [
 	{
 		category: 'Frontend',
 		icon: '◈',
@@ -170,11 +239,11 @@ export const SKILLS = [
 	'Problem Solving'
 ] as const;
 
-export const CERTIFICATIONS = [
+export const CERTIFICATIONS: Certification[] = [
 	{
 		title: 'AI Fluency Framework & Foundations',
 		issuer: 'Anthropic',
-		issuerKey: 'anthropic' as const,
+		issuerKey: 'anthropic',
 		url: 'https://verify.skilljar.com/c/yocgvc36qdpg',
 		year: '2026',
 		note: 'Generative AI · Prompt Engineering · +3 skills'
@@ -182,7 +251,7 @@ export const CERTIFICATIONS = [
 	{
 		title: 'AI Tools Workshop',
 		issuer: 'Be10x',
-		issuerKey: 'be10x' as const,
+		issuerKey: 'be10x',
 		url: 'https://certx.in/certificate/0270772f-3809-4400-b29b-1e1c61cd09971285007',
 		year: '2026',
 		note: 'Artificial Intelligence (AI) · Generative AI · +6 skills'
@@ -190,7 +259,7 @@ export const CERTIFICATIONS = [
 	{
 		title: 'Deloitte Data Analytics Job Simulation',
 		issuer: 'Deloitte',
-		issuerKey: 'deloitte' as const,
+		issuerKey: 'deloitte',
 		url: 'https://www.theforage.com/completion-certificates/9PBTqmSxAf6zZTseP/io9DzWKe3PTsiS6GG_9PBTqmSxAf6zZTseP_69efa7cb46cdaaf6083732a1_1777351911651_completion_certificate.pdf',
 		year: '2026',
 		note: 'Data Analysis · Microsoft Excel · +3 skills'
@@ -198,33 +267,49 @@ export const CERTIFICATIONS = [
 	{
 		title: 'Gemini Certification for Students (K12)',
 		issuer: 'Google',
-		issuerKey: 'google' as const,
+		issuerKey: 'google',
 		url: 'https://edu.exceedlms.com/student/award/NxZ5F5nk3FfXtMMRrV3mSjNB',
 		year: '2026',
 		note: 'Generative AI · Artificial Intelligence (AI) · +3 skills'
 	}
 ] as const;
 
-export const ACHIEVEMENTS = [
+export const ACHIEVEMENTS: Achievement[] = [
 	{
 		title: 'SBS Hack The Gap',
-		description: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.'
+		description: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
+		body: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
+		year: '2024',
+		icon: '🚀',
+		accent: 'var(--accent-gold)'
 	},
 	{
 		title: 'FarmSathi — Agritech Build',
-		description: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.'
+		description: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
+		body: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
+		year: '2024',
+		icon: '🌾',
+		accent: 'var(--accent-teal)'
 	},
 	{
 		title: 'Team Leadership',
-		description: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.'
+		description: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
+		body: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
+		year: '2023',
+		icon: '🤝',
+		accent: 'var(--accent-purple)'
 	},
 	{
 		title: '4 AI Certifications',
-		description: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.'
+		description: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
+		body: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
+		year: '2026',
+		icon: '🧠',
+		accent: 'var(--accent-gold)'
 	}
-] as const;
+];
 
-export const PROJECTS = [
+export const PROJECTS: Project[] = [
 	{
 		id: 'farmsathi',
 		title: 'FarmSathi',
@@ -241,6 +326,13 @@ export const PROJECTS = [
 		],
 		featured: true
 	}
+];
+
+export const BEYOND_CODING = [
+	{ label: 'Reading', icon: '📚' },
+	{ label: 'Hiking', icon: '🥾' },
+	{ label: 'Photography', icon: '📷' },
+	{ label: 'Music', icon: '🎧' }
 ] as const;
 
 export const FARMSATHI = {
