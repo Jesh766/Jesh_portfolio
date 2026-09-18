@@ -1,13 +1,8 @@
-# Contact form (EmailJS)
+# Contact form
 
-## 1. Get EmailJS credentials
+The contact form posts to the server-side `/api/contact` endpoint. It stores submissions in Supabase and optionally sends a notification through Resend. No email provider key is exposed to the browser.
 
-1. Sign up at [https://www.emailjs.com/](https://www.emailjs.com/).
-2. Create an **Email Service** (Gmail, Outlook, etc.) and note the **Service ID**.
-3. Create an **Email Template** with variables such as `from_name`, `from_email`, and `message` (match the names used in `Contact.svelte`).
-4. Open **Account → API Keys** and copy your **Public Key**.
-
-## 2. Fill `.env`
+## 1. Fill `.env`
 
 Copy `.env.example` to `.env` in the project root and replace the placeholders:
 
@@ -16,9 +11,11 @@ cp .env.example .env
 ```
 
 ```env
-VITE_EMAILJS_SERVICE_ID=service_xxxxx
-VITE_EMAILJS_TEMPLATE_ID=template_xxxxx
-VITE_EMAILJS_PUBLIC_KEY=your_public_key
+PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
+RESEND_API_KEY=re_xxxxx
+CONTACT_FROM_EMAIL=Portfolio <hello@your-domain.com>
+CONTACT_TO_EMAIL=you@example.com
 ```
 
 Restart the dev server after changing env vars.
@@ -29,4 +26,4 @@ Restart the dev server after changing env vars.
 npm run dev
 ```
 
-Open the site, scroll to **Contact**, submit the form with valid values. You should see a success toast when EmailJS accepts the send. If keys are missing or wrong, the form shows an error state with a message.
+Open the site, scroll to **Contact**, and submit the form with valid values. The form validates again on the server. Supabase is required for storing submissions; Resend is optional for email notifications.

@@ -85,11 +85,11 @@
 				style="color: var(--text-muted);"
 			>
 				<span class="h-px w-6 bg-gradient-to-r from-[var(--accent-gold)]/60 to-transparent" aria-hidden="true"></span>
-				<span data-editable="site.projectsLabel">Projects</span>
+				<span data-editable="site.projectsLabel">{contentState.site.projectsLabel}</span>
 			</p>
-			<h2 data-display-heading class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.projectsHeading">Featured work</h2>
+			<h2 data-display-heading class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.projectsHeading">{contentState.site.projectsHeading}</h2>
 			<p class="mt-4 max-w-xl text-base leading-relaxed" data-editable="site.projectsIntro" style="color: var(--text-secondary);">
-				Real projects with real code. Every card links to GitHub.
+				{contentState.site.projectsIntro}
 			</p>
 		</div>
 

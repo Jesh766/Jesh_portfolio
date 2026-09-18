@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { NAV, NAV_CONTACT, SITE } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
+
+	const navigation = $derived(
+		contentState.navigation.length
+			? contentState.navigation.filter((item) => item.visible).sort((a, b) => a.order - b.order)
+			: NAV.map((item, order) => ({ ...item, visible: true, order }))
+	);
 
 	async function downloadResume() {
 		await fetch('/api/resume', { method: 'POST', keepalive: true }).catch(() => {});
@@ -30,7 +37,7 @@
 	});
 
 	onMount(() => {
-		const sectionIds = ['hero', ...NAV.map((n) => n.id), NAV_CONTACT.id];
+		const sectionIds = ['hero', ...navigation.map((n) => n.id), NAV_CONTACT.id];
 		const observers: IntersectionObserver[] = [];
 
 		sectionIds.forEach((id) => {
@@ -76,7 +83,7 @@
 
 		<!-- Desktop nav links -->
 		<ul class="nav-links" role="list">
-			{#each NAV as item}
+			{#each navigation as item}
 				<li>
 					<a
 						href="#{item.id}"
@@ -140,7 +147,7 @@
 
 	<nav class="mobile-nav" aria-label="Mobile navigation">
 		<ul class="mobile-nav__list" role="list">
-			{#each NAV as item}
+			{#each navigation as item}
 				<li>
 					<a
 						href="#{item.id}"

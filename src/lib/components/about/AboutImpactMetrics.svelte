@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { contentState } from '$lib/stores/content.svelte';
+	import { DEFAULT_ABOUT } from '$lib/data/site';
 
-	const metrics = [
-		{ value: 1, suffix: '', label: 'Hackathon Competed' },
-		{ value: 4, suffix: '+', label: 'AI Certifications' },
-		{ value: 5, suffix: '+', label: 'Projects Built' },
-		{ value: 2, suffix: '+', label: 'Years Learning' }
-	] as const;
+	const metrics = $derived(contentState.about.metrics.length ? contentState.about.metrics : DEFAULT_ABOUT.metrics);
 
-	let displayed = $state(metrics.map(m => `0${m.suffix}`));
+	let displayed = $state<string[]>([]);
 	let cards: HTMLElement[] = $state([]);
+
+	$effect(() => {
+		if (displayed.length !== metrics.length) displayed = metrics.map((metric) => `0${metric.suffix}`);
+	});
 
 	onMount(() => {
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

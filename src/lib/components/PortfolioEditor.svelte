@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { contentState } from '$lib/stores/content.svelte';
+	import type { Project } from '$lib/data/site';
 
-	let enabled = false;
-	let status = 'Editor inactive';
+	let enabled = $state(false);
+	let status = $state('Editor inactive');
 	let saveTimer: ReturnType<typeof setTimeout> | undefined;
+	let projectsOpen = $state(false);
 
 	function parsePath(path: string) {
 		return path
@@ -77,6 +79,14 @@
 				body: JSON.stringify({
 					content: {
 						site: { ...contentState.site },
+						navigation: structuredClone(contentState.navigation),
+						socials: structuredClone(contentState.socials),
+						heroRoles: structuredClone(contentState.heroRoles),
+						heroStats: structuredClone(contentState.heroStats),
+						about: structuredClone(contentState.about),
+						seo: structuredClone(contentState.seo),
+						sections: structuredClone(contentState.sections),
+						footer: structuredClone(contentState.footer),
 						projects: structuredClone(contentState.projects as unknown[]),
 						journey: structuredClone(contentState.journey as unknown[]),
 						skills: structuredClone(contentState.skills as unknown[]),
@@ -100,6 +110,42 @@
 		} catch {
 			status = 'Save failed';
 		}
+	}
+
+	function createProject(): Project {
+		return {
+			id: `project-${Date.now()}`,
+			title: 'New project',
+			tagline: 'Add a short project description.',
+			tags: [],
+			status: 'In progress',
+			year: String(new Date().getFullYear()),
+			github: '',
+			demo: '',
+			metrics: [],
+			featured: false
+		};
+	}
+
+	async function addProject() {
+		contentState.projects = [...contentState.projects, createProject()];
+		projectsOpen = true;
+		status = 'Saving...';
+		await persistEdits();
+	}
+
+	async function removeProject(index: number) {
+		const project = contentState.projects[index];
+		if (!project || !window.confirm(`Delete ${project.title || 'this project'}?`)) return;
+		contentState.projects = contentState.projects.filter((_, projectIndex) => projectIndex !== index);
+		status = 'Saving...';
+		await persistEdits();
+	}
+
+	async function updateProjectTitle(index: number, title: string) {
+		contentState.projects = contentState.projects.map((project, projectIndex) => projectIndex === index ? { ...project, title } : project);
+		status = 'Saving...';
+		await persistEdits();
 	}
 
 	async function verifyAdminSession() {
@@ -147,14 +193,33 @@
 
 {#if enabled}
 	<div class="portfolio-editor-panel" aria-live="polite">
-		<div>
+		<div class="portfolio-editor-heading">
 			<p class="portfolio-editor-kicker">Editor mode</p>
 			<h3>Portfolio controls</h3>
+			<button class="portfolio-editor-project-toggle" type="button" onclick={() => projectsOpen = !projectsOpen} aria-expanded={projectsOpen}>
+				Projects {projectsOpen ? '−' : '+'}
+			</button>
 		</div>
 		<div class="portfolio-editor-actions">
 			<span class="portfolio-editor-status">{status}</span>
-			<button class="portfolio-editor-button" type="button" on:click={exitEditor}>Exit editor</button>
+			<button class="portfolio-editor-button" type="button" onclick={exitEditor}>Exit editor</button>
 		</div>
+		{#if projectsOpen}
+			<div class="portfolio-editor-projects">
+				<div class="portfolio-editor-projects__header">
+					<span>Manage projects directly</span>
+					<button class="portfolio-editor-add" type="button" onclick={addProject}>+ Add project</button>
+				</div>
+				{#each contentState.projects as project, index}
+					<div class="portfolio-editor-project-row">
+						<input value={project.title} aria-label={`Project ${index + 1} title`} oninput={(event) => updateProjectTitle(index, event.currentTarget.value)} />
+						<button class="portfolio-editor-delete" type="button" onclick={() => removeProject(index)}>Delete</button>
+					</div>
+				{:else}
+					<p class="portfolio-editor-empty">No projects yet. Add your first project.</p>
+				{/each}
+			</div>
+		{/if}
 	</div>
 {/if}
 
@@ -199,6 +264,74 @@
 		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 		border-radius: 0.85rem;
 		color: #fff;
+	}
+
+	.portfolio-editor-heading {
+		min-width: 0;
+	}
+
+	.portfolio-editor-project-toggle,
+	.portfolio-editor-add,
+	.portfolio-editor-delete {
+		border: 1px solid rgba(201, 168, 76, 0.35);
+		background: rgba(201, 168, 76, 0.08);
+		color: #fff;
+		padding: 0.4rem 0.6rem;
+		font-size: 0.68rem;
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+
+	.portfolio-editor-project-toggle {
+		margin-top: 0.65rem;
+	}
+
+	.portfolio-editor-projects {
+		grid-column: 1 / -1;
+		width: 100%;
+		padding-top: 0.7rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.portfolio-editor-projects__header,
+	.portfolio-editor-project-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.portfolio-editor-projects__header {
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+		font-size: 0.7rem;
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.portfolio-editor-project-row + .portfolio-editor-project-row {
+		margin-top: 0.45rem;
+	}
+
+	.portfolio-editor-project-row input {
+		min-width: 0;
+		flex: 1;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		background: rgba(0, 0, 0, 0.3);
+		color: #fff;
+		padding: 0.45rem 0.55rem;
+		font-size: 0.72rem;
+		border-radius: 0.3rem;
+	}
+
+	.portfolio-editor-delete {
+		border-color: rgba(255, 130, 110, 0.35);
+		background: rgba(255, 100, 80, 0.08);
+		white-space: nowrap;
+	}
+
+	.portfolio-editor-empty {
+		margin: 0;
+		font-size: 0.7rem;
+		color: rgba(255, 255, 255, 0.55);
 	}
 
 	.portfolio-editor-kicker {

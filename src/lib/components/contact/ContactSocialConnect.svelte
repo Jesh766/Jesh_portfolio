@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { SITE, SOCIAL_LINKS } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
@@ -10,6 +11,7 @@
 		whatsapp: '#25D366',
 		email: '#c9a84c'
 	};
+	const socialLinks = $derived(contentState.socials.length ? contentState.socials.filter((link) => link.visible).sort((a, b) => a.order - b.order) : SOCIAL_LINKS.map((link, order) => ({ id: link.icon, ...link, visible: true, order })));
 
 	onMount(async () => {
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -35,7 +37,7 @@
 	</div>
 
 	<div class="contact-social__grid">
-		{#each SOCIAL_LINKS as link}
+		{#each socialLinks as link}
 			<a
 				href={link.href}
 				target="_blank"
@@ -72,7 +74,7 @@
 
 		<!-- Email -->
 		<a
-			href="mailto:{SITE.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
+			href="mailto:{contentState.contact.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
 			class="contact-social-card"
 			data-contact-social-card
 			data-cursor-hover

@@ -9,17 +9,23 @@
 	import ScrollProgress from '$lib/components/global/ScrollProgress.svelte';
 	import ScrollInit from '$lib/components/global/ScrollInit.svelte';
 	import AvailableForWork from '$lib/components/global/AvailableForWork.svelte';
-		import { observeSections, startCursorSampling, startSessionTracking, trackEvent } from '$lib/utils/analytics';
+	import {
+		observeSections,
+		startCursorSampling,
+		startSessionTracking,
+		trackEvent
+	} from '$lib/utils/analytics';
 	import { SITE } from '$lib/data/site';
-		import { loadPublishedContent } from '$lib/stores/content.svelte';
+	import { env } from '$env/dynamic/public';
+	import { loadPublishedContent } from '$lib/stores/content.svelte';
 
 	let { children } = $props();
 
 	onMount(() => {
-				void loadPublishedContent();
+		void loadPublishedContent();
 		trackEvent({ event_type: 'page_view', path: window.location.pathname });
-				const stopSessionTracking = startSessionTracking();
-				const stopCursorSampling = startCursorSampling();
+		const stopSessionTracking = startSessionTracking();
+		const stopCursorSampling = startCursorSampling();
 
 		const cleanupSections = observeSections(
 			['about', 'skills', 'projects', 'certifications', 'achievements', 'contact'],
@@ -69,8 +75,8 @@
 
 		return () => {
 			cleanupSections();
-						stopSessionTracking();
-						stopCursorSampling();
+			stopSessionTracking();
+			stopCursorSampling();
 			lenisDestroy?.();
 		};
 	});
@@ -92,7 +98,7 @@
 		jobTitle: SITE.title,
 		email: SITE.email,
 		telephone: SITE.phone,
-		url: SITE.url,
+		url: env.PUBLIC_SITE_URL || SITE.url,
 		address: {
 			'@type': 'PostalAddress',
 			addressLocality: 'Ahmedabad',

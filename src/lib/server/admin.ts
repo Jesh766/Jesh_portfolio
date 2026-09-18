@@ -5,11 +5,11 @@ export const ADMIN_COOKIE = 'portfolio_admin_session';
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
 
 function getSecret() {
-	return env.ADMIN_SESSION_SECRET || env.ADMIN_PASSWORD || '';
+	return env.ADMIN_SESSION_SECRET || '';
 }
 
 export function isAdminConfigured() {
-	return Boolean(env.ADMIN_PASSWORD && getSecret());
+	return Boolean(env.ADMIN_PASSWORD && env.ADMIN_SESSION_SECRET);
 }
 
 export function verifyAdminPassword(password: string) {

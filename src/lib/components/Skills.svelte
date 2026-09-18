@@ -40,9 +40,9 @@
 
 	<div class="relative z-[1] mx-auto max-w-6xl">
 		<SectionHeader
-			eyebrow="Technical Skills"
-			title="Skill universe"
-			description="Full-stack development, AI tooling, and everything in between."
+			eyebrow={contentState.site.skillsLabel ?? 'Technical Skills'}
+			title={contentState.site.skillsHeading ?? 'Skill universe'}
+			description={contentState.site.skillsIntro ?? 'Full-stack development, AI tooling, and everything in between.'}
 		/>
 
 		<!-- Categorized Skills Grid -->

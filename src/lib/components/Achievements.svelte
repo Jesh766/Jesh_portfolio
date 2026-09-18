@@ -37,11 +37,11 @@
 		<div data-section-header>
 			<p class="flex items-center gap-3 text-xs tracking-[0.4em] uppercase" style="color: var(--text-muted);">
 				<span class="h-px w-6 bg-gradient-to-r from-[var(--accent-gold)]/60 to-transparent" aria-hidden="true"></span>
-				<span data-editable="site.journeyTag">Journey</span>
+				<span data-editable="site.journeyTag">{contentState.site.journeyTag}</span>
 			</p>
-			<h2 class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.journeyTitle">Journey so far</h2>
+			<h2 class="display-heading mt-5 text-3xl sm:text-4xl md:text-5xl" data-editable="site.journeyTitle">{contentState.site.journeyTitle}</h2>
 			<p class="mt-4 max-w-xl text-base leading-relaxed" data-editable="site.journeyIntro" style="color: var(--text-secondary);">
-				From first line of code to building AI-powered products — here's the path.
+				{contentState.site.journeyIntro}
 			</p>
 		</div>
 

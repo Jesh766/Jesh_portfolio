@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { SITE } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
 </script>
 
 <div class="about-intro" data-about-reveal>
 	<div class="about-intro__bg-text" aria-hidden="true">STORY</div>
-	<p class="about-intro__eyebrow">Software Engineer & AI Enthusiast</p>
-	<h3 class="about-intro__title">Building Intelligent<br /><span class="about-intro__title--gold">Digital Experiences</span></h3>
+	<p class="about-intro__eyebrow" data-editable="about.introEyebrow">{contentState.about.introEyebrow}</p>
+	<h3 class="about-intro__title" data-editable="about.introTitle">{contentState.about.introTitle}<br /><span class="about-intro__title--gold" data-editable="about.introTitleAccent">{contentState.about.introTitleAccent}</span></h3>
 	<p class="about-intro__desc">
-		I transform ideas into impactful digital products by combining modern full-stack development,
-		AI-powered tools, and thoughtful product design — bridging the gap between creativity and code.
+		{contentState.about.introDescription}
 	</p>
 	<div class="about-intro__divider" aria-hidden="true"></div>
 	<p class="about-intro__signature font-display">{SITE.name}</p>

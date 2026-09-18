@@ -37,7 +37,7 @@
 	<p class="section-watermark section-watermark--certified" aria-hidden="true">CERTIFIED</p>
 
 	<div class="relative z-[1] mx-auto max-w-6xl">
-		<SectionHeader eyebrow="Certifications" title="Credentials" />
+		<SectionHeader eyebrow={contentState.site.certificationsLabel ?? 'Certifications'} title={contentState.site.certificationsHeading ?? 'Credentials'} description={contentState.site.certificationsIntro} />
 
 		<div class="mt-14 grid gap-5 sm:gap-6 md:grid-cols-2">
 			{#each certifications as cert, i}

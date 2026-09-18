@@ -81,14 +81,14 @@
 
 	<div class="relative z-[1] mx-auto max-w-6xl">
 		<SectionHeader
-			eyebrow="About"
-			title="Story & trajectory"
-			description="From university foundations to creative technology—crafting experiences where design, AI, and engineering meet with intention."
+			eyebrow={contentState.about.eyebrow}
+			title={contentState.about.title}
+			description={contentState.about.description}
 		/>
 
 		<p class="status-available relative z-[1] mt-6" data-editable="site.availability">
 			<span class="status-available__dot" aria-hidden="true"></span>
-			Available for opportunities
+			{contentState.site.availability}
 		</p>
 
 		<div class="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">

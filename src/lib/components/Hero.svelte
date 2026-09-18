@@ -15,6 +15,7 @@
 	let leftCol: HTMLDivElement;
 	let scrollHint: HTMLElement;
 	let mouse = $state({ x: 0, y: 0 });
+	const heroStats = $derived(contentState.heroStats.length ? contentState.heroStats : HERO_STATS);
 
 	onMount(() => {
 		const onHeroMove = (e: PointerEvent) => {
@@ -50,11 +51,7 @@
 					},
 					'-=0.4'
 				)
-				.to(
-					'[data-hero-letter]',
-					{ filter: 'blur(0px)', duration: 0.75, stagger: 0.03 },
-					'-=0.65'
-				)
+				.to('[data-hero-letter]', { filter: 'blur(0px)', duration: 0.75, stagger: 0.03 }, '-=0.65')
 				.from('[data-hero-role]', { y: 16, opacity: 0, duration: 0.6 }, '-=0.5')
 				.from('[data-hero-tagline]', { y: 20, opacity: 0, duration: 0.7 }, '-=0.4')
 				.from('[data-hero-stat]', { y: 24, opacity: 0, duration: 0.6, stagger: 0.08 }, '-=0.35')
@@ -94,7 +91,10 @@
 
 	<SectionOrbs variant="dark" />
 
-	<div class="hero-entrance-vignette pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
+	<div
+		class="hero-entrance-vignette pointer-events-none absolute inset-0 z-[1]"
+		aria-hidden="true"
+	></div>
 	<div class="hero-right-glow pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 	<div class="hero-left-glow pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 	<div class="hero-light-streak pointer-events-none z-[1]" aria-hidden="true"></div>
@@ -103,7 +103,7 @@
 		class="relative z-10 mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-8 px-5 md:grid-cols-2 md:gap-10 md:px-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:px-16"
 	>
 		<!-- Mobile portrait (above text, only on mobile) -->
-		<div class="flex md:hidden relative items-center justify-center w-full pt-2">
+		<div class="relative flex w-full items-center justify-center pt-2 md:hidden">
 			<div class="hero-mobile-portrait">
 				<HeroPortraitStage bind:mouse />
 			</div>
@@ -141,12 +141,16 @@
 				<HeroRoleRotator />
 			</p>
 
-			<p data-hero-tagline data-editable="site.brand" class="mt-5 max-w-lg text-base leading-relaxed text-balance md:text-lg hero-tagline">
+			<p
+				data-hero-tagline
+				data-editable="site.brand"
+				class="hero-tagline mt-5 max-w-lg text-base leading-relaxed text-balance md:text-lg"
+			>
 				{contentState.site.brand}
 			</p>
 
 			<div class="hero-stat-grid mt-8 lg:max-w-md">
-				{#each HERO_STATS as stat}
+				{#each heroStats as stat}
 					<div data-hero-stat>
 						<HeroStatCounter
 							value={stat.value}
@@ -168,7 +172,7 @@
 		</div>
 
 		<!-- Desktop portrait (right column) -->
-		<div class="hidden md:flex relative items-center justify-center md:justify-end">
+		<div class="relative hidden items-center justify-center md:flex md:justify-end">
 			<HeroPortraitStage bind:mouse />
 		</div>
 	</div>
@@ -180,6 +184,7 @@
 		style="color: var(--text-muted);"
 	>
 		<span>Scroll</span>
-		<span class="block h-9 w-px bg-gradient-to-b from-[var(--accent-gold)]/50 to-transparent"></span>
+		<span class="block h-9 w-px bg-gradient-to-b from-[var(--accent-gold)]/50 to-transparent"
+		></span>
 	</a>
 </section>

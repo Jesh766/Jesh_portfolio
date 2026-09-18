@@ -1,16 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
-	import emailjs from '@emailjs/browser';
 	import { SITE } from '$lib/data/site';
 	import { contentState } from '$lib/stores/content.svelte';
 	import SectionOrbs from '$lib/components/global/SectionOrbs.svelte';
 	import ContactSocialConnect from '$lib/components/contact/ContactSocialConnect.svelte';
 	import { revealSectionHeaders } from '$lib/utils/scrollReveal';
-
-	const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID ?? '';
-	const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID ?? '';
-	const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY ?? '';
 
 	let name = $state('');
 	let email = $state('');
@@ -24,7 +19,6 @@
 	let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 	onMount(async () => {
-		if (publicKey) emailjs.init(publicKey);
 		await revealSectionHeaders();
 		const { default: ScrollTrigger } = await import('gsap/ScrollTrigger');
 		gsap.registerPlugin(ScrollTrigger);
@@ -95,34 +89,23 @@
 		e.preventDefault();
 		if (status === 'sending') return;
 
-		const btn = (e.submitter as HTMLButtonElement | null) ?? form?.querySelector('button[type="submit"]');
+		const btn =
+			(e.submitter as HTMLButtonElement | null) ?? form?.querySelector('button[type="submit"]');
 		if (btn) {
 			const rect = btn.getBoundingClientRect();
 			spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
 		}
 
-		if (!serviceId || !templateId || !publicKey) {
-			status = 'error';
-			errorMsg = 'Email is not configured. Add VITE_EMAILJS_* keys to .env (see SETUP.md).';
-			showToast('error', 'Failed to send message. Please try again later.');
-			return;
-		}
-
 		status = 'sending';
 		errorMsg = '';
 		try {
-			await emailjs.send(
-				serviceId,
-				templateId,
-				{
-					from_name: name,
-					from_email: email,
-					reply_to: email,
-					message,
-					to_name: SITE.name
-				},
-				publicKey
-			);
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ name, email, message })
+			});
+			const payload = await response.json().catch(() => ({}));
+			if (!response.ok) throw new Error(payload.error ?? 'Failed to send message.');
 			status = 'sent';
 			showToast('success', "Message sent successfully. I'll get back to you soon.");
 			pulseFormSuccess();
@@ -155,11 +138,17 @@
 
 <section id="contact" class="section-padding contact-noise relative z-[1] overflow-hidden">
 	<SectionOrbs variant="dark" />
-	<div bind:this={burstLayer} class="contact-burst-layer pointer-events-none fixed inset-0 z-[150]" aria-hidden="true"></div>
+	<div
+		bind:this={burstLayer}
+		class="contact-burst-layer pointer-events-none fixed inset-0 z-[150]"
+		aria-hidden="true"
+	></div>
 
 	{#if toast}
 		<div
-			class="contact-toast {toast.type === 'success' ? 'contact-toast--success' : 'contact-toast--error'}"
+			class="contact-toast {toast.type === 'success'
+				? 'contact-toast--success'
+				: 'contact-toast--error'}"
 			role="status"
 			aria-live="polite"
 		>
@@ -182,12 +171,24 @@
 
 	<div class="relative z-[1] mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:items-start">
 		<div data-section-header>
-			<p class="text-xs tracking-[0.4em] uppercase" style="color: var(--text-muted);" data-editable="site.contactLabel">Contact</p>
-			<h2 class="display-heading mt-4 text-3xl sm:text-4xl md:text-5xl" data-editable="site.contactHeading">Let's build something remarkable</h2>
+			<p
+				class="text-xs tracking-[0.4em] uppercase"
+				style="color: var(--text-muted);"
+				data-editable="site.contactLabel"
+			>
+				Contact
+			</p>
+			<h2
+				class="display-heading mt-4 text-3xl sm:text-4xl md:text-5xl"
+				data-editable="site.contactHeading"
+			>
+				Let's build something remarkable
+			</h2>
 			<ul class="mt-10 space-y-4" style="color: var(--text-secondary);" data-contact-details>
 				<li>
 					<a
-						href="mailto:{contentState.contact.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
+						href="mailto:{contentState.contact
+							.email}?subject=Hello%20Jayshil&body=Hi%20Jayshil%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A"
 						data-cursor-hover
 						data-cursor-link
 						class="transition hover:text-[var(--accent-gold)]"

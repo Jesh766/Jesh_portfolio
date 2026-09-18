@@ -8,33 +8,36 @@
 	import Contact from '$lib/components/Contact.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import PortfolioEditor from '$lib/components/PortfolioEditor.svelte';
+	import { contentState } from '$lib/stores/content.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+	const seo = $derived(contentState.seo);
+	const sectionVisible = (id: string) => contentState.sections.find((section) => section.id === id)?.visible ?? true;
 </script>
 
 <svelte:head>
-	<title>{data.meta.title}</title>
-	<meta name="description" content={data.meta.description} />
-	<meta property="og:title" content={data.meta.og.title} />
-	<meta property="og:description" content={data.meta.og.description} />
+	<title>{seo.title || data.meta.title}</title>
+	<meta name="description" content={seo.description || data.meta.description} />
+	<meta property="og:title" content={seo.ogTitle || data.meta.og.title} />
+	<meta property="og:description" content={seo.ogDescription || data.meta.og.description} />
 	<meta property="og:type" content={data.meta.og.type} />
 	<meta property="og:url" content={data.meta.og.url} />
-	<meta property="og:image" content={data.meta.og.image} />
+	<meta property="og:image" content={seo.ogImage || data.meta.og.image} />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={data.meta.og.title} />
-	<meta name="twitter:description" content={data.meta.og.description} />
+	<meta name="twitter:title" content={seo.ogTitle || data.meta.og.title} />
+	<meta name="twitter:description" content={seo.ogDescription || data.meta.og.description} />
 	<!-- SEO keywords -->
-	<meta name="keywords" content="Jayshil Thakkar, Software Engineer Portfolio, AI Developer, Full Stack Developer, Ahmedabad Developer, Web Developer India" />
+	<meta name="keywords" content={seo.keywords} />
 	<meta name="author" content="Jayshil Thakkar" />
 </svelte:head>
 
-<Hero />
-<About />
-<Skills />
-<Projects />
-<Certifications />
-<Achievements />
-<Contact />
+{#if sectionVisible('hero')}<Hero />{/if}
+{#if sectionVisible('about')}<About />{/if}
+{#if sectionVisible('skills')}<Skills />{/if}
+{#if sectionVisible('projects')}<Projects />{/if}
+{#if sectionVisible('certifications')}<Certifications />{/if}
+{#if sectionVisible('achievements')}<Achievements />{/if}
+{#if sectionVisible('contact')}<Contact />{/if}
 <Footer />
 <PortfolioEditor />

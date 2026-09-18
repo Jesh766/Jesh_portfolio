@@ -2,26 +2,29 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { HERO_ROLES } from '$lib/data/site';
+	import { contentState } from '$lib/stores/content.svelte';
+
+	const roles = $derived(contentState.heroRoles.length ? contentState.heroRoles : HERO_ROLES);
 
 	let root: HTMLSpanElement;
-	let display = $state<string>(HERO_ROLES[0]);
+	let display = $state<string>('');
 	let roleIndex = 0;
-	let charIndex = HERO_ROLES[0].length;
+	let charIndex = 0;
 	let phase: 'pause' | 'erase' | 'type' = 'pause';
 
 	onMount(() => {
 		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (reduced) return;
 
-		display = HERO_ROLES[0];
-		charIndex = HERO_ROLES[0].length;
+		display = roles[0] ?? 'Software Engineer';
+		charIndex = display.length;
 
 		if (root) {
 			gsap.from(root, { opacity: 0, duration: 0.5, delay: 1.8 });
 		}
 
 		const step = () => {
-			const role = HERO_ROLES[roleIndex];
+			const role = roles[roleIndex] ?? roles[0] ?? 'Software Engineer';
 
 			if (phase === 'pause') {
 				phase = 'erase';
@@ -35,14 +38,14 @@
 					display = role.slice(0, charIndex);
 					window.setTimeout(step, 32);
 				} else {
-					roleIndex = (roleIndex + 1) % HERO_ROLES.length;
+					roleIndex = (roleIndex + 1) % Math.max(roles.length, 1);
 					phase = 'type';
 					window.setTimeout(step, 280);
 				}
 				return;
 			}
 
-			const nextRole = HERO_ROLES[roleIndex];
+			const nextRole = roles[roleIndex] ?? 'Software Engineer';
 			if (charIndex < nextRole.length) {
 				charIndex++;
 				display = nextRole.slice(0, charIndex);

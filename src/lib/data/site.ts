@@ -14,6 +14,23 @@ export type SiteConfig = {
 	url: string;
 	portrait: string;
 	resume: string;
+	availability?: string;
+	projectsLabel?: string;
+	projectsHeading?: string;
+	projectsIntro?: string;
+	journeyTag?: string;
+	journeyTitle?: string;
+	journeyIntro?: string;
+	contactLabel?: string;
+	contactHeading?: string;
+	skillsLabel?: string;
+	skillsHeading?: string;
+	skillsIntro?: string;
+	certificationsLabel?: string;
+	certificationsHeading?: string;
+	certificationsIntro?: string;
+	footerDescription?: string;
+	copyrightText?: string;
 };
 
 export const SITE: SiteConfig = {
@@ -28,11 +45,28 @@ export const SITE: SiteConfig = {
 	github: 'https://github.com/Jesh766',
 	instagram: 'https://www.instagram.com/jesh.766/',
 	whatsapp: 'https://wa.me/919173389217',
-	brand:
-		'Building intelligent web applications, AI-powered tools, and modern digital experiences.',
+	brand: 'Building intelligent web applications, AI-powered tools, and modern digital experiences.',
 	url: 'https://jayshilthakkar.com',
 	portrait: '/images/jayshil-portrait.png',
 	resume: '/resume.pdf'
+	,
+	availability: 'Available for opportunities',
+	projectsLabel: 'Projects',
+	projectsHeading: 'Featured work',
+	projectsIntro: 'Real projects with real code. Every card links to GitHub.',
+	journeyTag: 'Journey',
+	journeyTitle: 'Journey so far',
+	journeyIntro: "From first line of code to building AI-powered products — here's the path.",
+	contactLabel: 'Contact',
+	contactHeading: "Let's build something remarkable",
+	skillsLabel: 'Technical Skills',
+	skillsHeading: 'Skill universe',
+	skillsIntro: 'Full-stack development, AI tooling, and everything in between.',
+	certificationsLabel: 'Certifications',
+	certificationsHeading: 'Credentials',
+	certificationsIntro: '',
+	footerDescription: 'Software Engineer & AI Enthusiast',
+	copyrightText: '© {year} · {title}'
 };
 
 export const SOCIAL_LINKS = [
@@ -56,6 +90,30 @@ export type HeroStat = {
 	display?: string;
 };
 
+export type NavigationItem = { id: string; label: string; visible: boolean; order: number };
+export type SocialLink = { id: string; label: string; href: string; icon: string; visible: boolean; order: number };
+export type SEOContent = { title: string; description: string; keywords: string; ogTitle: string; ogDescription: string; ogImage: string };
+export type SectionSetting = { id: string; label: string; visible: boolean; order: number };
+export type AboutContent = { eyebrow: string; title: string; description: string; introEyebrow: string; introTitle: string; introTitleAccent: string; introDescription: string; focusEyebrow: string; focuses: Array<{ icon: string; label: string }>; metrics: HeroStat[] };
+export type ContactContent = { email: string; phone: string; location: string; formTitle: string; formDescription: string; nameLabel: string; emailLabel: string; messageLabel: string; submitLabel: string; successMessage: string; errorMessage: string };
+export type PortfolioContent = {
+	site: SiteConfig;
+	navigation: NavigationItem[];
+	socials: SocialLink[];
+	heroRoles: string[];
+	heroStats: HeroStat[];
+	about: AboutContent;
+	contact: ContactContent;
+	seo: SEOContent;
+	sections: SectionSetting[];
+	footer: { name: string; description: string; copyright: string };
+	projects: Project[];
+	journey: TimelineEntry[];
+	skills: SkillCategory[];
+	certifications: Certification[];
+	achievements: Achievement[];
+};
+
 export const HERO_STATS: HeroStat[] = [
 	{ value: 4, suffix: '+', label: 'AI Certifications' },
 	{ value: 1, suffix: '', label: 'Hackathon Competed' },
@@ -63,10 +121,70 @@ export const HERO_STATS: HeroStat[] = [
 	{ value: 2, suffix: '+', label: 'Years of Learning' }
 ];
 
+export const DEFAULT_NAVIGATION: NavigationItem[] = [
+	{ id: 'about', label: 'About', visible: true, order: 0 },
+	{ id: 'skills', label: 'Skills', visible: true, order: 1 },
+	{ id: 'projects', label: 'Projects', visible: true, order: 2 },
+	{ id: 'certifications', label: 'Certifications', visible: true, order: 3 },
+	{ id: 'achievements', label: 'Journey', visible: true, order: 4 }
+];
+export const DEFAULT_SOCIALS: SocialLink[] = [
+	{ id: 'linkedin', label: 'LinkedIn', href: SITE.linkedin, icon: 'linkedin', visible: true, order: 0 },
+	{ id: 'github', label: 'GitHub', href: SITE.github, icon: 'github', visible: true, order: 1 },
+	{ id: 'instagram', label: 'Instagram', href: SITE.instagram, icon: 'instagram', visible: true, order: 2 },
+	{ id: 'whatsapp', label: 'WhatsApp', href: SITE.whatsapp, icon: 'whatsapp', visible: true, order: 3 }
+];
+export const DEFAULT_HERO_ROLES = [...HERO_ROLES];
+export const DEFAULT_ABOUT: AboutContent = {
+	eyebrow: 'About',
+	title: 'Story & trajectory',
+	description: 'From university foundations to creative technology—crafting experiences where design, AI, and engineering meet with intention.',
+	introEyebrow: 'Software Engineer & AI Enthusiast',
+	introTitle: 'Building Intelligent',
+	introTitleAccent: 'Digital Experiences',
+	introDescription: 'I transform ideas into impactful digital products by combining modern full-stack development, AI-powered tools, and thoughtful product design — bridging the gap between creativity and code.',
+	focusEyebrow: 'Current Focus',
+	focuses: [
+		{ icon: '⚡', label: 'AI Engineering' },
+		{ icon: '🎨', label: 'Creative Development' },
+		{ icon: '✦', label: 'Frontend Experiences' },
+		{ icon: '🧭', label: 'Product Thinking' },
+		{ icon: '🤝', label: 'Human + AI Collaboration' }
+	],
+	metrics: [
+		{ value: 1, suffix: '', label: 'Hackathon Competed' },
+		{ value: 4, suffix: '+', label: 'AI Certifications' },
+		{ value: 5, suffix: '+', label: 'Projects Built' },
+		{ value: 2, suffix: '+', label: 'Years Learning' }
+	]
+};
+export const DEFAULT_SECTIONS: SectionSetting[] = [
+	{ id: 'hero', label: 'Hero', visible: true, order: 0 },
+	{ id: 'about', label: 'About', visible: true, order: 1 },
+	{ id: 'skills', label: 'Skills', visible: true, order: 2 },
+	{ id: 'projects', label: 'Projects', visible: true, order: 3 },
+	{ id: 'certifications', label: 'Certifications', visible: true, order: 4 },
+	{ id: 'achievements', label: 'Journey', visible: true, order: 5 },
+	{ id: 'contact', label: 'Contact', visible: true, order: 6 }
+];
+export const DEFAULT_SEO: SEOContent = {
+	title: `${SITE.name} · ${SITE.title}`,
+	description: 'Jayshil Thakkar — Software Engineer & AI Enthusiast from Ahmedabad, India. Building intelligent web applications, AI-powered tools, and modern digital experiences.',
+	keywords: 'Jayshil Thakkar, Software Engineer Portfolio, AI Developer, Full Stack Developer, Ahmedabad Developer, Web Developer India',
+	ogTitle: `${SITE.name} · ${SITE.title}`,
+	ogDescription: 'Building intelligent web applications, AI-powered tools, and modern digital experiences.',
+	ogImage: '/og-image.svg'
+};
+
 export const HERO_FLOATING_CARDS = [
 	{ title: 'AI Certifications', position: 'top-left' as const, delay: 0, floatDuration: 4.2 },
 	{ title: 'FarmSathi Project', position: 'top-right' as const, delay: 0.15, floatDuration: 5.1 },
-	{ title: 'Hackathon Participant', position: 'bottom-left' as const, delay: 0.3, floatDuration: 6.3 },
+	{
+		title: 'Hackathon Participant',
+		position: 'bottom-left' as const,
+		delay: 0.3,
+		floatDuration: 6.3
+	},
 	{ title: 'Team Leader', position: 'bottom-right' as const, delay: 0.45, floatDuration: 7 }
 ] as const;
 
@@ -159,32 +277,38 @@ export const TIMELINE: TimelineEntry[] = [
 	{
 		year: '2022',
 		title: 'GLS University',
-		description: 'Started BSc IT at GLS, Ahmedabad — diving into computer science, design thinking, and collaborative problem solving from day one.'
+		description:
+			'Started BSc IT at GLS, Ahmedabad — diving into computer science, design thinking, and collaborative problem solving from day one.'
 	},
 	{
 		year: '2023',
 		title: 'First Web Projects',
-		description: 'Shipped responsive, accessible web experiences with modern HTML, CSS, and JavaScript. Built a foundation that actually runs in browsers.'
+		description:
+			'Shipped responsive, accessible web experiences with modern HTML, CSS, and JavaScript. Built a foundation that actually runs in browsers.'
 	},
 	{
 		year: '2023',
 		title: 'AI Deep-Dive',
-		description: 'Explored LLMs, prompt engineering, and AI ethics. Earned certifications from Anthropic, Google, Be10x, and Deloitte × Forage to validate the learning.'
+		description:
+			'Explored LLMs, prompt engineering, and AI ethics. Earned certifications from Anthropic, Google, Be10x, and Deloitte × Forage to validate the learning.'
 	},
 	{
 		year: '2024',
 		title: 'SBS Hack The Gap',
-		description: 'Led Team The 5th Element at the hackathon — translated a raw idea into a working prototype with clear product storytelling under 24-hour pressure.'
+		description:
+			'Led Team The 5th Element at the hackathon — translated a raw idea into a working prototype with clear product storytelling under 24-hour pressure.'
 	},
 	{
 		year: '2024',
 		title: 'FarmSathi',
-		description: 'Co-built an agritech platform connecting smallholder farmers through a token-based equipment and labour sharing network. Research, design, and full-stack development.'
+		description:
+			'Co-built an agritech platform connecting smallholder farmers through a token-based equipment and labour sharing network. Research, design, and full-stack development.'
 	},
 	{
 		year: '2025',
 		title: 'AI Portfolio & Projects',
-		description: 'Built AI-powered tools, this portfolio, and more full-stack projects. Growing toward production systems and world-class product craft.'
+		description:
+			'Built AI-powered tools, this portfolio, and more full-stack projects. Growing toward production systems and world-class product craft.'
 	}
 ] as const;
 
@@ -277,7 +401,8 @@ export const CERTIFICATIONS: Certification[] = [
 export const ACHIEVEMENTS: Achievement[] = [
 	{
 		title: 'SBS Hack The Gap',
-		description: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
+		description:
+			'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
 		body: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
 		year: '2024',
 		icon: '🚀',
@@ -285,7 +410,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 	},
 	{
 		title: 'FarmSathi — Agritech Build',
-		description: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
+		description:
+			'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
 		body: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
 		year: '2024',
 		icon: '🌾',
@@ -293,7 +419,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 	},
 	{
 		title: 'Team Leadership',
-		description: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
+		description:
+			'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
 		body: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
 		year: '2023',
 		icon: '🤝',
@@ -301,7 +428,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 	},
 	{
 		title: '4 AI Certifications',
-		description: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
+		description:
+			'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
 		body: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
 		year: '2026',
 		icon: '🧠',
@@ -313,7 +441,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 'farmsathi',
 		title: 'FarmSathi',
-		tagline: 'A platform enabling farmers to share equipment and labour through a token-based ecosystem.',
+		tagline:
+			'A platform enabling farmers to share equipment and labour through a token-based ecosystem.',
 		tags: ['AgriTech', 'AI', 'Full Stack', 'UX'],
 		status: 'Hackathon Project',
 		year: '2024',
@@ -377,5 +506,9 @@ export const achievements = ACHIEVEMENTS;
 export const farmsathiCaseStudy = {
 	title: FARMSATHI.title,
 	tagline: FARMSATHI.tagline,
-	sections: FARMSATHI.sections.map((s) => ({ id: s.label.toLowerCase().replace(/\s+/g, '-'), title: s.label, body: s.body }))
+	sections: FARMSATHI.sections.map((s) => ({
+		id: s.label.toLowerCase().replace(/\s+/g, '-'),
+		title: s.label,
+		body: s.body
+	}))
 };

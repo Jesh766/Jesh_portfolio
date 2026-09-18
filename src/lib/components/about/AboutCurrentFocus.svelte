@@ -1,15 +1,10 @@
 <script lang="ts">
-	const focuses = [
-		{ icon: '⚡', label: 'AI Engineering' },
-		{ icon: '🎨', label: 'Creative Development' },
-		{ icon: '✦', label: 'Frontend Experiences' },
-		{ icon: '🧭', label: 'Product Thinking' },
-		{ icon: '🤝', label: 'Human + AI Collaboration' }
-	];
+	import { contentState } from '$lib/stores/content.svelte';
+	const focuses = $derived(contentState.about.focuses);
 </script>
 
 <div class="current-focus" data-about-reveal>
-	<p class="current-focus__eyebrow">Current Focus</p>
+	<p class="current-focus__eyebrow">{contentState.about.focusEyebrow}</p>
 	<div class="current-focus__grid">
 		{#each focuses as f, i}
 			<div class="current-focus__card" style="--fi:{i}" data-cursor-hover>
