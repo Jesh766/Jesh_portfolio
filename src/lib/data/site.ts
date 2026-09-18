@@ -46,10 +46,9 @@ export const SITE: SiteConfig = {
 	instagram: 'https://www.instagram.com/jesh.766/',
 	whatsapp: 'https://wa.me/919173389217',
 	brand: 'Building intelligent web applications, AI-powered tools, and modern digital experiences.',
-	url: 'https://jayshilthakkar.com',
+	url: 'http://localhost:5173',
 	portrait: '/images/jayshil-portrait.png',
-	resume: '/resume.pdf'
-	,
+	resume: '/resume.pdf',
 	availability: 'Available for opportunities',
 	projectsLabel: 'Projects',
 	projectsHeading: 'Featured work',

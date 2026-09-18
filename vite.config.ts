@@ -4,6 +4,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
+	server: {
+		allowedHosts: ['.trycloudflare.com']
+	},
 	ssr: {
 		noExternal: ['three', '@threlte/core', '@threlte/extras']
 	}

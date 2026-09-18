@@ -17,16 +17,46 @@ function getSessionId() {
 	return sessionId;
 }
 
+function getTrafficMetadata(overrides: Record<string, unknown> = {}) {
+	if (typeof window === 'undefined') return overrides;
+	const params = new URLSearchParams(window.location.search);
+	const referrer = document.referrer || '';
+	let referrerHost = '';
+	try {
+		if (referrer) {
+			referrerHost = new URL(referrer).hostname.replace(/^www\./, '');
+		}
+	} catch {
+		referrerHost = '';
+	}
+	const utmSource = params.get('utm_source') ?? '';
+	const utmMedium = params.get('utm_medium') ?? '';
+	const utmCampaign = params.get('utm_campaign') ?? '';
+	const source = utmSource || referrerHost || 'direct';
+	return {
+		source,
+		referrer,
+		referrer_host: referrerHost,
+		utm_source: utmSource,
+		utm_medium: utmMedium,
+		utm_campaign: utmCampaign,
+		landing_page: window.location.pathname,
+		...overrides
+	};
+}
+
 export async function trackEvent(payload: AnalyticsPayload) {
 	if (typeof window === 'undefined') return;
 	try {
+		const metadata = getTrafficMetadata(payload.metadata ?? {});
 		await fetch('/api/analytics', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				...payload,
 				path: payload.path ?? window.location.pathname,
-				session_id: getSessionId()
+				session_id: getSessionId(),
+				metadata
 			}),
 			keepalive: true
 		});

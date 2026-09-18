@@ -13,6 +13,8 @@ The hero uses `static/images/jayshil-portrait.png` and `static/images/jayshil-po
 
 Replace `static/resume.pdf` with your resume.
 
+Before deployment, set `PUBLIC_SITE_URL` to your live domain. Until then, the local default is `http://localhost:5173`, which keeps metadata and social preview links working during development.
+
 ### Environment
 
 | Variable                    | Description                                              |
@@ -20,6 +22,7 @@ Replace `static/resume.pdf` with your resume.
 | `PUBLIC_SITE_URL`           | Canonical site URL                                       |
 | `PUBLIC_SUPABASE_URL`       | Supabase project URL                                     |
 | `PUBLIC_SUPABASE_ANON_KEY`  | Supabase anon key                                        |
+| `PUBLIC_CLARITY_PROJECT_ID` | Optional Microsoft Clarity project ID                    |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role (server only)                               |
 | `ADMIN_PASSWORD`            | Password for `/admin` (server only)                      |
 | `ADMIN_SESSION_SECRET`      | Long random secret used to sign the admin session cookie |
@@ -38,6 +41,16 @@ Replace `static/resume.pdf` with your resume.
 Open `/admin` after deployment. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the server environment before signing in. The dashboard provides a visual editor for site identity, hero copy, and repeatable projects, with private drafts and an explicit publish action. Content is stored in the `portfolio_content` table and the dashboard shows session, page-view, section-view, duration, and coarse cursor-grid telemetry. The analytics tables retain IP address and user agent for operational abuse review; no raw cursor trails are stored and the dashboard does not display visitor IP addresses.
 
 Tables: `contact_submissions`, `analytics_events`, `resume_downloads`.
+
+### Microsoft Clarity
+
+Microsoft Clarity provides session recordings, heatmaps, and interaction insights. Create a project at [clarity.microsoft.com](https://clarity.microsoft.com), copy its project ID, and add it to `.env`:
+
+```env
+PUBLIC_CLARITY_PROJECT_ID=your-clarity-project-id
+```
+
+Restart the dev server. The public site will load Clarity, and the admin dashboard will show a **Clarity** button linking directly to the project. Clarity is optional and disabled when this variable is empty.
 
 ## Development
 

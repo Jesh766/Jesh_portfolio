@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { env } from '$env/dynamic/public';
 	import {
 		ACHIEVEMENTS,
 		CERTIFICATIONS,
@@ -64,17 +65,22 @@
 
 	let content: Content = structuredClone(defaultContent);
 	let analytics = {
-		totals: { visitors: 0, pageViews: 0, averageDurationMs: 0, days: 30 },
+		totals: { visitors: 0, pageViews: 0, averageDurationMs: 0, days: 30, periodLabel: 'Last 30 days' },
 		sections: [] as { section: string; views: number }[],
+		trafficSources: [] as { source: string; visits: number }[],
+		dailyViews: [] as { date: string; views: number }[],
+		sessions: [] as { session_id: string; source: string; duration_ms: number; last_seen: string; pages: string[]; sections: string[] }[],
 		recent: [] as { event_type: string; page_path: string | null; section_id: string | null; created_at: string }[]
 	};
 	let notice = '';
 	let error = '';
 	let saving = false;
 	let dirty = false;
-	let activeTab = 'content';
+	let activeTab = 'analytics';
+	let selectedRange: number | 'all' = 30;
 
 	const TABS = [
+		{ id: 'analytics', label: 'Analytics' },
 		{ id: 'content', label: 'Global' },
 		{ id: 'hero', label: 'Hero' },
 		{ id: 'about', label: 'About' },
@@ -86,8 +92,7 @@
 		{ id: 'contact', label: 'Contact' },
 		{ id: 'socials', label: 'Socials' },
 		{ id: 'footer', label: 'Footer' },
-		{ id: 'seo', label: 'SEO' },
-		{ id: 'analytics', label: 'Analytics' }
+		{ id: 'seo', label: 'SEO' }
 	];
 
 	onMount(() => {
@@ -98,9 +103,10 @@
 		};
 		window.addEventListener('beforeunload', onBeforeUnload);
 		void (async () => {
+			const timezone = new Date().getTimezoneOffset();
 			const [contentResponse, analyticsResponse] = await Promise.all([
 				fetch('/api/admin/content'),
-				fetch('/api/admin/analytics?days=30')
+				fetch(`/api/admin/analytics?days=30&tzOffset=${timezone}`, { cache: 'no-store' })
 			]);
 			if (contentResponse.status === 401 || analyticsResponse.status === 401) {
 				window.location.href = '/admin';
@@ -272,10 +278,79 @@
 		window.open('/?preview=1', '_blank', 'noopener,noreferrer');
 	}
 
+	const supabaseDashboardUrl = (() => {
+		const match = env.PUBLIC_SUPABASE_URL?.match(/^https?:\/\/([^.]+)\.supabase\.co/);
+		return match ? `https://supabase.com/dashboard/project/${match[1]}` : '';
+	})();
+	const clarityDashboardUrl = env.PUBLIC_CLARITY_PROJECT_ID
+		? `https://clarity.microsoft.com/projects/view/${encodeURIComponent(env.PUBLIC_CLARITY_PROJECT_ID)}`
+		: '';
+
 	function formatDuration(milliseconds: number) {
 		if (!milliseconds) return '—';
 		const seconds = Math.round(milliseconds / 1000);
 		return seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+	}
+
+	function formatSourceName(source: string) {
+		const value = (source ?? '').trim().toLowerCase();
+		if (!value || value === 'direct') return 'Direct';
+		if (value.includes('linkedin')) return 'LinkedIn';
+		if (value.includes('instagram')) return 'Instagram';
+		if (value.includes('twitter') || value.includes('x.com')) return 'X / Twitter';
+		if (value.includes('github')) return 'GitHub';
+		if (value.includes('whatsapp')) return 'WhatsApp';
+		if (value.includes('facebook')) return 'Facebook';
+		if (value.includes('google')) return 'Google';
+		if (value.includes('bing')) return 'Bing';
+		if (value.includes('reddit')) return 'Reddit';
+		if (value.includes('portfolio')) return 'Portfolio link';
+		return value.charAt(0).toUpperCase() + value.slice(1);
+	}
+
+	function formatSessionPages(pages: string[]) {
+		if (!pages?.length) return 'No page data';
+		const unique = [...new Set(pages)].slice(0, 3);
+		return unique.map(formatPageName).join(' • ');
+	}
+
+	function formatEventName(eventType: string) {
+		const labels: Record<string, string> = {
+			page_view: 'Viewed a page',
+			section_view: 'Viewed a section',
+			session_start: 'Started a visit',
+			session_end: 'Ended a visit',
+			cursor_grid: 'Cursor movement',
+			contact_submit: 'Sent contact form'
+		};
+		return labels[eventType] ?? eventType.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+	}
+
+	function formatPageName(path: string | null) {
+		if (!path || path === '/') return 'Portfolio homepage';
+		if (path.startsWith('/admin')) return 'Admin dashboard';
+		return path
+			.replace(/^\//, '')
+			.split('/')
+			.filter(Boolean)
+			.map((part) => part.replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()))
+			.join(' / ') || 'Portfolio homepage';
+	}
+
+	function formatChartDate(date: string) {
+		return new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+	}
+
+	async function changeAnalyticsRange(range: number | 'all') {
+		selectedRange = range;
+		const query = range === 'all' ? 'range=all' : `days=${range}`;
+		const timezone = new Date().getTimezoneOffset();
+		const response = await fetch(`/api/admin/analytics?${query}&tzOffset=${timezone}`, { cache: 'no-store' });
+		if (response.status === 401) {
+			window.location.href = '/admin';
+			return;
+		}
+		if (response.ok) analytics = await response.json();
 	}
 </script>
 
@@ -284,7 +359,7 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<div class="admin-shell">
+<div class:analytics-mode={activeTab === 'analytics'} class="admin-shell">
 	<header class="admin-header">
 		<div>
 			<p class="admin-kicker">Private workspace</p>
@@ -292,18 +367,14 @@
 			<p class="muted">Edit your portfolio visually. No code required.</p>
 		</div>
 		<div class="admin-actions">
+			{#if supabaseDashboardUrl}<a href={supabaseDashboardUrl} target="_blank" rel="noreferrer">Supabase</a>{/if}
+			{#if clarityDashboardUrl}<a href={clarityDashboardUrl} target="_blank" rel="noreferrer">Clarity</a>{/if}
 			<button onclick={previewDraft}>Preview draft</button>
 			<a href="/?editor=1" target="_blank" rel="noreferrer">Open editor mode</a>
 			<a href="/" target="_blank" rel="noreferrer">View site</a>
 			<button onclick={signOut}>Sign out</button>
 		</div>
 	</header>
-
-	<section class="metrics" aria-label="Visitor metrics">
-		<div><span>Visitors</span><strong>{analytics.totals.visitors}</strong><small>anonymous sessions / {analytics.totals.days} days</small></div>
-		<div><span>Page views</span><strong>{analytics.totals.pageViews}</strong><small>recorded portfolio visits</small></div>
-		<div><span>Average time</span><strong>{formatDuration(analytics.totals.averageDurationMs)}</strong><small>reported session duration</small></div>
-	</section>
 
 	<nav class="tabs" aria-label="Admin sections">
 		{#each TABS as tab}
@@ -312,19 +383,72 @@
 	</nav>
 
 	{#if activeTab === 'analytics'}
+		<section class="metrics" aria-label="Visitor metrics">
+			<div><span>Visitors</span><strong>{analytics.totals.visitors}</strong><small>anonymous sessions / {analytics.totals.periodLabel}</small></div>
+			<div><span>Page views</span><strong>{analytics.totals.pageViews}</strong><small>recorded portfolio visits</small></div>
+			<div><span>Average time</span><strong>{formatDuration(analytics.totals.averageDurationMs)}</strong><small>reported session duration</small></div>
+		</section>
 		<main class="analytics-layout">
+			<header class="analytics-header">
+				<div>
+					<p class="analytics-eyebrow">Live audience intelligence</p>
+					<h2>Analytics overview</h2>
+				</div>
+				<div class="range-controls" aria-label="Analytics date range">
+					{#each [{ days: 1, label: 'Today' }, { days: 7, label: 'Last 7 days' }, { days: 30, label: 'Last 30 days' }, { days: 'all' as const, label: 'Total views' }] as range}
+						<button class:active={selectedRange === range.days} onclick={() => changeAnalyticsRange(range.days)}>{range.label}</button>
+					{/each}
+				</div>
+			</header>
+			<section class="panel views-chart-panel">
+				<div class="panel-heading"><div><p class="admin-kicker">Portfolio views</p><h2>Views over time</h2></div><strong class="chart-total">{analytics.totals.pageViews} total</strong></div>
+				<div class="views-chart" aria-label={`Portfolio views for ${analytics.totals.periodLabel}`}>
+					{#if Math.max(...analytics.dailyViews.map((item) => item.views), 0) > 0}
+						{#each analytics.dailyViews as item}
+							{@const maxViews = Math.max(...analytics.dailyViews.map((entry) => entry.views), 1)}
+							<div class="chart-column" title={`${formatChartDate(item.date)}: ${item.views} views`}>
+								<span class="chart-value">{item.views || ''}</span>
+								<div class="chart-bar" style={`height: ${Math.max((item.views / maxViews) * 100, item.views ? 8 : 2)}%`}></div>
+								{#if analytics.dailyViews.length <= 7 || item.date === analytics.dailyViews[0]?.date || item.date === analytics.dailyViews.at(-1)?.date}<small>{formatChartDate(item.date)}</small>{/if}
+							</div>
+						{/each}
+					{:else}
+						<p class="muted chart-empty">No portfolio views in this period yet.</p>
+					{/if}
+				</div>
+			</section>
 			<section class="panel">
 				<div class="panel-heading"><div><p class="admin-kicker">Engagement</p><h2>Section views</h2></div></div>
 				{#if analytics.sections.length}
 					<div class="section-list">{#each analytics.sections as item}<div><span>{item.section}</span><strong>{item.views}</strong></div>{/each}</div>
 				{:else}<p class="muted">No section data yet.</p>{/if}
 			</section>
+			<section class="panel">
+				<div class="panel-heading"><div><p class="admin-kicker">Traffic</p><h2>Top sources</h2></div></div>
+				{#if analytics.trafficSources.length}
+					<div class="section-list">{#each analytics.trafficSources as item}<div><span>{formatSourceName(item.source)}</span><strong>{item.visits}</strong></div>{/each}</div>
+				{:else}<p class="muted">No traffic source data yet.</p>{/if}
+			</section>
+			<section class="panel">
+				<div class="panel-heading"><div><p class="admin-kicker">Sessions</p><h2>Recent visits</h2></div></div>
+				{#if analytics.sessions.length}
+					<div class="session-list">
+						{#each analytics.sessions as session}
+							<div class="session-item">
+								<div class="session-header"><span>{formatSourceName(session.source)}</span><strong>{formatDuration(session.duration_ms)}</strong></div>
+								<small>{new Date(session.last_seen).toLocaleString()}</small>
+								<p>{formatSessionPages(session.pages)}</p>
+							</div>
+						{/each}
+					</div>
+				{:else}<p class="muted">No session data yet.</p>{/if}
+			</section>
 			<section class="panel recent-panel">
 				<div class="panel-heading"><div><p class="admin-kicker">Event stream</p><h2>Recent activity</h2></div></div>
 				<div class="table-wrap">
 					<table>
 						<thead><tr><th>Event</th><th>Path</th><th>Time</th></tr></thead>
-						<tbody>{#each analytics.recent as event}<tr><td>{event.event_type}</td><td>{event.section_id ?? event.page_path ?? '—'}</td><td>{new Date(event.created_at).toLocaleString()}</td></tr>{/each}</tbody>
+						<tbody>{#each analytics.recent as event}<tr><td>{formatEventName(event.event_type)}</td><td>{event.section_id ? formatPageName(`/${event.section_id}`) : formatPageName(event.page_path)}</td><td>{new Date(event.created_at).toLocaleString()}</td></tr>{/each}</tbody>
 					</table>
 				</div>
 			</section>
@@ -543,6 +667,26 @@
 	.tabs { display: flex; gap: .4rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.1); overflow-x: auto; }.tabs button { flex: none; border: 0; border-bottom: 2px solid transparent; padding: .8rem 1rem; color: rgba(255,255,255,.56); background: transparent; cursor: pointer; white-space: nowrap; }.tabs button.active { color: #fff; border-color: #c9a84c; }
 	.editor-layout { display: grid; gap: 1.5rem; }.panel { padding: 1.4rem; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.035); }.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.4rem; }label { display: grid; gap: .45rem; color: rgba(255,255,255,.7); font-size: .78rem; }label.wide { grid-column: 1 / -1; }input, textarea, select { width: 100%; padding: .78rem .85rem; border: 1px solid rgba(255,255,255,.14); border-radius: 2px; color: #fff; background: rgba(0,0,0,.25); font: inherit; }select option { background: #100d09; }textarea { resize: vertical; line-height: 1.5; }.section-heading { margin-top: 2.5rem; }
 	.draft-status { color: #8ee0bf; font-size: .75rem; }.draft-status.dirty { color: #f4c96b; }.project-editor-list { display: grid; gap: 1rem; margin-top: 1.5rem; }.project-editor-card { padding: 1.2rem; border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.18); }.project-card-heading { display: flex; align-items: center; gap: .8rem; }.project-index { color: #c9a84c; font-size: .75rem; }.project-name { flex: 1; font-size: 1.2rem; }.icon-button { border: 0; background: transparent; cursor: pointer; }.danger { color: #ff9b8d; }.primary { border: 0; padding: .75rem 1.1rem; background: #c9a84c; color: #080604; font-weight: 700; cursor: pointer; }.primary:disabled, .secondary:disabled { opacity: .45; cursor: wait; }.empty-state { padding: 2rem; text-align: center; color: rgba(255,255,255,.5); border: 1px dashed rgba(255,255,255,.15); }.publish-bar { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; padding: 1rem clamp(1rem, 4vw, 4rem); border-top: 1px solid rgba(255,255,255,.12); background: rgba(8,6,4,.94); backdrop-filter: blur(16px); }.success { color: #8ee0bf; }.error { color: #ff9b8d; }
-	.analytics-layout { display: grid; grid-template-columns: minmax(18rem, .65fr) minmax(0, 1.35fr); gap: 1.5rem; }.section-list div { display: flex; justify-content: space-between; padding: .85rem 0; border-bottom: 1px solid rgba(255,255,255,.1); }.section-list strong { color: #c9a84c; }.table-wrap { overflow-x: auto; margin-top: 1rem; }table { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }th, td { padding: .8rem; border-bottom: 1px solid rgba(255,255,255,.08); }th { color: #c9a84c; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
-	@media (max-width: 700px) { .admin-header, .publish-bar { align-items: flex-start; flex-direction: column; }.metrics, .field-grid, .analytics-layout { grid-template-columns: 1fr; }label.wide { grid-column: auto; }.publish-actions { width: 100%; }.publish-actions button { flex: 1; } }
+	.analytics-layout { display: grid; grid-template-columns: minmax(18rem, .65fr) minmax(0, 1.35fr); gap: 1.5rem; }.section-list div { display: flex; justify-content: space-between; padding: .85rem 0; border-bottom: 1px solid rgba(255,255,255,.1); }.section-list strong { color: #c9a84c; }
+	.analytics-header { grid-column: 1 / -1; display: flex; align-items: end; justify-content: space-between; gap: 1rem; padding: .25rem 0 .5rem; border-bottom: 1px solid rgba(116,214,177,.24); }
+	.analytics-eyebrow { margin: 0; color: #74d6b1; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; }
+	.analytics-header h2 { margin-top: .35rem; }
+	.range-controls { display: flex; gap: .35rem; flex-wrap: wrap; }
+	.range-controls button { border: 1px solid rgba(255,255,255,.14); padding: .55rem .7rem; color: rgba(255,255,255,.62); background: transparent; font: inherit; font-size: .72rem; cursor: pointer; }
+	.range-controls button:hover, .range-controls button.active { border-color: #c9a84c; color: #c9a84c; background: rgba(201,168,76,.08); }
+	.views-chart-panel { grid-column: 1 / -1; }
+	.chart-total { color: #c9a84c; font-size: .8rem; font-weight: 500; }
+	.views-chart { display: flex; align-items: end; gap: clamp(.25rem, 1vw, .7rem); min-height: 13rem; padding: 1.5rem .35rem .15rem; border-bottom: 1px solid rgba(255,255,255,.12); }
+	.chart-column { display: flex; position: relative; flex: 1; align-items: center; justify-content: end; min-width: 0; height: 10rem; flex-direction: column; gap: .35rem; }
+	.chart-value { min-height: .85rem; color: rgba(255,255,255,.62); font-size: .68rem; }
+	.chart-bar { width: min(2.4rem, 80%); min-height: 2px; border: 1px solid rgba(201,168,76,.7); background: linear-gradient(180deg, #e4c96d, #9b7625); transition: height .25s ease; }
+	.chart-column small { min-height: .85rem; color: rgba(255,255,255,.5); font-size: .62rem; white-space: nowrap; }
+	.chart-empty { width: 100%; text-align: center; }
+	.session-list { display: grid; gap: .8rem; margin-top: 1rem; }
+	.session-item { padding: .9rem 1rem; border: 1px solid rgba(255,255,255,.08); background: rgba(0,0,0,.18); }
+	.session-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .35rem; }
+	.session-item small { color: rgba(255,255,255,.55); }
+	.session-item p { margin: .55rem 0 0; color: rgba(255,255,255,.7); line-height: 1.5; }
+	.table-wrap { overflow-x: auto; margin-top: 1rem; }table { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }th, td { padding: .8rem; border-bottom: 1px solid rgba(255,255,255,.08); }th { color: #c9a84c; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
+	@media (max-width: 700px) { .admin-header, .publish-bar, .analytics-header { align-items: flex-start; flex-direction: column; }.metrics, .field-grid, .analytics-layout { grid-template-columns: 1fr; }.range-controls { width: 100%; }.range-controls button { flex: 1; }label.wide { grid-column: auto; }.publish-actions { width: 100%; }.publish-actions button { flex: 1; } }
 </style>

@@ -2,6 +2,7 @@
 	import './layout.css';
 	import '$lib/styles/effects.css';
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import favicon from '$lib/assets/favicon.svg';
 	import LoadingScreen from '$lib/components/LoadingScreen.svelte';
 	import Navigation from '$lib/components/Navigation.svelte';
@@ -23,6 +24,7 @@
 
 	onMount(() => {
 		void loadPublishedContent();
+		if (window.location.pathname.startsWith('/admin')) return;
 		trackEvent({ event_type: 'page_view', path: window.location.pathname });
 		const stopSessionTracking = startSessionTracking();
 		const stopCursorSampling = startCursorSampling();
@@ -91,6 +93,15 @@
 		rel="stylesheet"
 	/>
 	<meta name="theme-color" content="#080604" />
+		{#if env.PUBLIC_CLARITY_PROJECT_ID}
+			<script>
+				(function (c, l, a, r, i, t, y) {
+					c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+					t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+					y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+				})(window, document, 'clarity', 'script', {JSON.stringify(env.PUBLIC_CLARITY_PROJECT_ID)});
+			</script>
+		{/if}
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
 		'@type': 'Person',
@@ -109,12 +120,16 @@
 	})}</script>`}
 </svelte:head>
 
-<GlobalAmbient />
-<ScrollProgress />
-<ScrollInit />
-<LoadingScreen />
-<Navigation />
+{#if !page.url.pathname.startsWith('/admin')}
+	<GlobalAmbient />
+	<ScrollProgress />
+	<ScrollInit />
+	<LoadingScreen />
+	<Navigation />
+{/if}
 <main>
 	{@render children()}
 </main>
-<AvailableForWork />
+{#if !page.url.pathname.startsWith('/admin')}
+	<AvailableForWork />
+{/if}

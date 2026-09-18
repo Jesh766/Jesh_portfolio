@@ -20,6 +20,21 @@ CONTACT_TO_EMAIL=you@example.com
 
 Restart the dev server after changing env vars.
 
+## Microsoft Clarity analytics
+
+Clarity is Microsoft Clarity, not Google Analytics. To enable session recordings and heatmaps:
+
+1. Open [clarity.microsoft.com](https://clarity.microsoft.com) and create a project.
+2. Use your portfolio domain when prompted.
+3. Copy the project ID from the project settings or tracking setup screen.
+4. Add it to your local `.env`:
+
+```env
+PUBLIC_CLARITY_PROJECT_ID=your-clarity-project-id
+```
+
+After restarting the dev server, the admin dashboard shows a **Clarity** shortcut. The integration is optional and does not require a secret key.
+
 ## 3. Test locally
 
 ```bash
