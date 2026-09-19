@@ -8,7 +8,7 @@ export const prerender = false;
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_CONTEXT_BYTES = 180_000;
 const GEMINI_MODEL = env.GEMINI_MODEL || 'gemini-3.6-flash';
-const XAI_MODEL = env.XAI_MODEL || 'grok-3-mini';
+const XAI_MODEL = env.XAI_MODEL || 'grok-4.6';
 
 type AssistantMode = 'editor' | 'analytics';
 
