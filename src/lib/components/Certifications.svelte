@@ -9,6 +9,20 @@
 
 	const certifications = $derived(contentState.certifications.length ? contentState.certifications : CERTIFICATIONS);
 
+	function issuerKeyFor(cert: { issuer: string; issuerKey: string }) {
+		const value = `${cert.issuerKey} ${cert.issuer}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+		if (value.includes('anthropic') || value.includes('claude')) return 'anthropic';
+		if (value.includes('be10x')) return 'be10x';
+		if (value.includes('deloitte')) return 'deloitte';
+		if (value.includes('google') || value.includes('gemini')) return 'google';
+		return 'generic';
+	}
+
+	function issuerInitials(issuer: string) {
+		const words = issuer.trim().split(/\s+/).filter(Boolean);
+		return (words.length > 1 ? `${words[0][0]}${words[1][0]}` : issuer.slice(0, 2)).toUpperCase();
+	}
+
 	onMount(async () => {
 		await revealSectionHeaders();
 		const { default: ScrollTrigger } = await import('gsap/ScrollTrigger');
@@ -57,24 +71,24 @@
 
 					<!-- top row: logo + year pill -->
 					<div class="relative flex items-center justify-between gap-4">
-						<div class="cert-logo cert-logo--{cert.issuerKey}" aria-label={cert.issuer}>
-							{#if cert.issuerKey === 'anthropic'}
+						<div class="cert-logo cert-logo--{issuerKeyFor(cert)}" aria-label={cert.issuer}>
+							{#if issuerKeyFor(cert) === 'anthropic'}
 								<!-- Anthropic: black square with "AI" inside + wordmark -->
 								<span class="logo-anthropic">
 									<span class="logo-anthropic__badge">AI</span>
 									<span class="logo-anthropic__name">Anthropic</span>
 								</span>
-							{:else if cert.issuerKey === 'be10x'}
+							{:else if issuerKeyFor(cert) === 'be10x'}
 								<!-- Be10x: their bold lowercase wordmark -->
 								<span class="logo-be10x">
 									<span class="logo-be10x__be">be</span><span class="logo-be10x__num">10x</span>
 								</span>
-							{:else if cert.issuerKey === 'deloitte'}
+							{:else if issuerKeyFor(cert) === 'deloitte'}
 								<!-- Deloitte: serif wordmark + green dot -->
 								<span class="logo-deloitte">
 									<span class="logo-deloitte__text">Deloitte</span><span class="logo-deloitte__dot" aria-hidden="true"></span>
 								</span>
-							{:else if cert.issuerKey === 'google'}
+							{:else if issuerKeyFor(cert) === 'google'}
 								<!-- Google: 4-colour G icon + wordmark -->
 								<span class="logo-google">
 									<svg class="logo-google__g" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -86,7 +100,7 @@
 									<span class="logo-google__text">Google</span>
 								</span>
 							{:else}
-								<span class="logo-generic">{cert.issuer}</span>
+								<span class="logo-generic"><span class="logo-generic__badge">{issuerInitials(cert.issuer)}</span><span>{cert.issuer}</span></span>
 							{/if}
 						</div>
 						<span class="cert-year-pill flex-shrink-0">{cert.year}</span>
@@ -199,6 +213,8 @@
 		color: var(--text-secondary);
 		line-height: 1;
 	}
+	.logo-generic { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+	.logo-generic__badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 1px solid var(--accent-gold); border-radius: 6px; color: var(--accent-gold); font-size: 9px; font-weight: 800; letter-spacing: .04em; }
 
 	/* ── Shared hover ─────────────────────────────── */
 	.cert-logo {
