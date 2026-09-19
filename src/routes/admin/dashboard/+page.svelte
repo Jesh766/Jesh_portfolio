@@ -21,7 +21,7 @@
 		status: string; year: string; github: string; demo: string; metrics: { value: string; label: string }[]; featured?: boolean;
 	};
 	type SkillCategory = { category: string; icon: string; color: string; items: string[] };
-	type Certification = { title: string; issuer: string; issuerKey: string; url: string; year: string; note: string };
+	type Certification = { title: string; issuer: string; issuerKey: string; url: string; year: string; note: string; logoUrl?: string };
 	type ContactInfo = { email: string; phone: string; location: string; formTitle: string; formDescription: string; nameLabel: string; emailLabel: string; messageLabel: string; submitLabel: string; successMessage: string; errorMessage: string };
 
 	type Content = {
@@ -176,7 +176,7 @@
 	function moveSkillCategory(index: number, direction: -1 | 1) { content = { ...content, skills: moveItem(content.skills, index, direction) }; dirty = true; }
 
 	// ---------- certifications ----------
-	function emptyCertification(): Certification { return { title: 'New certification', issuer: '', issuerKey: 'google', url: '', year: String(new Date().getFullYear()), note: '' }; }
+	function emptyCertification(): Certification { return { title: 'New certification', issuer: '', issuerKey: 'google', url: '', year: String(new Date().getFullYear()), note: '', logoUrl: '' }; }
 	function updateCertification(index: number, key: keyof Certification, value: string) {
 		content = { ...content, certifications: content.certifications.map((c, i) => i === index ? { ...c, [key]: value } : c) };
 		dirty = true;

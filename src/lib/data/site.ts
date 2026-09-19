@@ -231,6 +231,7 @@ export type Certification = {
 	url: string;
 	year: string;
 	note?: string;
+	logoUrl?: string;
 };
 
 export type Project = {

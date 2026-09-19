@@ -149,7 +149,7 @@
 	}
 
 	function createCertification(): Certification {
-		return { title: 'New certification', issuer: 'Issuer name', issuerKey: 'google', url: 'https://', year: String(new Date().getFullYear()), note: '' };
+		return { title: 'New certification', issuer: 'Issuer name', issuerKey: 'google', url: 'https://', year: String(new Date().getFullYear()), note: '', logoUrl: '' };
 	}
 
 	async function addCertification() {

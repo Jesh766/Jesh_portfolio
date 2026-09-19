@@ -23,6 +23,16 @@
 		return (words.length > 1 ? `${words[0][0]}${words[1][0]}` : issuer.slice(0, 2)).toUpperCase();
 	}
 
+	function logoUrlFor(cert: { issuer: string; url: string; logoUrl?: string }) {
+		if (cert.logoUrl) return cert.logoUrl;
+		try {
+			const hostname = new URL(cert.url).hostname.replace(/^www\./, '');
+			return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128`;
+		} catch {
+			return '';
+		}
+	}
+
 	onMount(async () => {
 		await revealSectionHeaders();
 		const { default: ScrollTrigger } = await import('gsap/ScrollTrigger');
@@ -72,7 +82,10 @@
 					<!-- top row: logo + year pill -->
 					<div class="relative flex items-center justify-between gap-4">
 						<div class="cert-logo cert-logo--{issuerKeyFor(cert)}" aria-label={cert.issuer}>
-							{#if issuerKeyFor(cert) === 'anthropic'}
+							{#if logoUrlFor(cert) && issuerKeyFor(cert) === 'generic'}
+								<img class="logo-external" src={logoUrlFor(cert)} alt="" loading="lazy" referrerpolicy="no-referrer" />
+								<span>{cert.issuer}</span>
+							{:else if issuerKeyFor(cert) === 'anthropic'}
 								<!-- Anthropic: black square with "AI" inside + wordmark -->
 								<span class="logo-anthropic">
 									<span class="logo-anthropic__badge">AI</span>

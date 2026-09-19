@@ -41,6 +41,22 @@ function parseModelJson(text: string) {
 	return parsed;
 }
 
+function addCertificationLogoHints(content: unknown) {
+	if (!isRecord(content) || !Array.isArray(content.certifications)) return content;
+	return {
+		...content,
+		certifications: content.certifications.map((item) => {
+			if (!isRecord(item) || typeof item.url !== 'string' || item.logoUrl) return item;
+			try {
+				const hostname = new URL(item.url).hostname.replace(/^www\./, '');
+				return { ...item, logoUrl: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128` };
+			} catch {
+				return item;
+			}
+		})
+	};
+}
+
 async function requestGemini(prompt: string) {
 	const response = await fetch(
 		`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY ?? '')}`,
@@ -97,7 +113,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 	}
 
 	const editorRules = input.mode === 'editor'
-		? `You are in EDITOR MODE. Help edit this portfolio content. Apply the user's requested changes to the full content object and return the complete updated content. Preserve every unrelated field exactly. You may edit site text, navigation, socials, hero roles/stats, about, contact, SEO, sections, footer, projects, skills, and certifications. Do not add Journey or Achievements fields. Never change passwords, authentication, analytics data, server secrets, or code. If the request is ambiguous or destructive, explain it and return the content unchanged.`
+		? `You are in EDITOR MODE. Interpret short, natural commands intelligently; infer omitted fields from context and the supplied URL instead of asking the user to repeat a full template. Apply the requested changes to the full portfolio content and return the complete updated content. Preserve every unrelated field exactly. You may edit site text, navigation, socials, hero roles/stats, about, contact, SEO, sections, footer, projects, skills, and certifications. For certifications, infer the issuer, issuerKey, year, note, and verification URL from the user's command when possible, and keep logoUrl empty if it is not known because the server will derive a safe logo from the verification domain. Do not add Journey or Achievements fields. Never change passwords, authentication, analytics data, server secrets, or code. If the request is ambiguous or destructive, explain it and return the content unchanged.`
 		: `You are in ANALYTICS MODE. Answer the user's question using the provided analytics context. Do not modify portfolio content. Explain numbers plainly and mention the selected period when relevant.`;
 
 	const prompt = `${editorRules}
@@ -120,8 +136,9 @@ ${JSON.stringify(input.analytics ?? null)}`;
 		try {
 			const result = parseModelJson(await requestProvider(prompt));
 			if (input.mode === 'editor') {
-				validatePortfolioContent(result.content);
-				return json({ reply: result.reply, content: result.content, provider });
+				const content = addCertificationLogoHints(result.content);
+				validatePortfolioContent(content);
+				return json({ reply: result.reply, content, provider });
 			}
 			return json({ reply: result.reply, provider });
 		} catch (error) {

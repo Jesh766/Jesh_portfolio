@@ -253,13 +253,14 @@ export function validatePortfolioContent(value: unknown) {
 			value.certifications.some(
 				(item) =>
 					!isRecord(item) ||
-					!hasOnlyKeys(item, ['title', 'issuer', 'issuerKey', 'url', 'year', 'note']) ||
+					!hasOnlyKeys(item, ['title', 'issuer', 'issuerKey', 'url', 'year', 'note', 'logoUrl']) ||
 					!stringField(item.title, 300) ||
 					!stringField(item.issuer, 120) ||
 					!stringField(item.issuerKey, 80) ||
 					!stringField(item.url, 2048) ||
 					!stringField(item.year, 20) ||
-					(item.note !== undefined && !stringField(item.note, 500))
+					(item.note !== undefined && !stringField(item.note, 500)) ||
+					(item.logoUrl !== undefined && !stringField(item.logoUrl, 2048))
 			))
 	)
 		throw new RequestValidationError('Certifications content has an invalid structure.');
