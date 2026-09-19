@@ -4,7 +4,6 @@
 	import Skills from '$lib/components/Skills.svelte';
 	import Projects from '$lib/components/Projects.svelte';
 	import Certifications from '$lib/components/Certifications.svelte';
-	import Achievements from '$lib/components/Achievements.svelte';
 	import Contact from '$lib/components/Contact.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import PortfolioEditor from '$lib/components/PortfolioEditor.svelte';
@@ -37,7 +36,6 @@
 {#if sectionVisible('skills')}<Skills />{/if}
 {#if sectionVisible('projects')}<Projects />{/if}
 {#if sectionVisible('certifications')}<Certifications />{/if}
-{#if sectionVisible('achievements')}<Achievements />{/if}
 {#if sectionVisible('contact')}<Contact />{/if}
 <Footer />
 <PortfolioEditor />

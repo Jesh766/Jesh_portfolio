@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { TIMELINE } from '$lib/data/site';
 	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
@@ -12,9 +11,6 @@
 	import AboutImpactMetrics from '$lib/components/about/AboutImpactMetrics.svelte';
 	import AboutCurrentFocus from '$lib/components/about/AboutCurrentFocus.svelte';
 
-	let timelinePath = $state<SVGPathElement | undefined>(undefined);
-	const journey = $derived(contentState.journey.length ? contentState.journey : TIMELINE);
-
 	onMount(() => {
 		void (async () => {
 			await revealSectionHeaders();
@@ -22,35 +18,7 @@
 			gsap.registerPlugin(ScrollTrigger);
 			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-			if (!reduced && timelinePath) {
-				const len = timelinePath.getTotalLength();
-				gsap.set(timelinePath, { strokeDasharray: len, strokeDashoffset: len });
-				gsap.to(timelinePath, {
-					scrollTrigger: { trigger: '#about', start: 'top 65%', end: 'bottom 60%', scrub: 1 },
-					strokeDashoffset: 0,
-					ease: 'none'
-				});
-			}
-
 			if (!reduced) {
-				gsap.utils.toArray<HTMLElement>('[data-timeline-item]').forEach((el, i) => {
-					gsap.from(el, {
-						scrollTrigger: { trigger: el, start: 'top 86%' },
-						x: 80,
-						opacity: 0,
-						duration: 0.85,
-						delay: i * 0.12,
-						ease: 'power3.out'
-					});
-					gsap.from(el.querySelector('[data-timeline-dot]'), {
-						scrollTrigger: { trigger: el, start: 'top 86%' },
-						scale: 0,
-						duration: 0.5,
-						delay: i * 0.12,
-						ease: 'back.out(2)'
-					});
-				});
-
 				gsap.from('#about [data-about-reveal]', {
 					scrollTrigger: { trigger: '#about .about-left', start: 'top 78%' },
 					y: 32,
@@ -77,9 +45,8 @@
 	<AboutAmbient />
 	<div class="section-dot-grid about-section__dot-grid" aria-hidden="true"></div>
 	<SectionOrbs variant="about" />
-	<p class="section-watermark" aria-hidden="true">Journey</p>
 
-	<div class="relative z-[1] mx-auto max-w-6xl">
+	<div class="relative z-[1] mx-auto max-w-3xl">
 		<SectionHeader
 			eyebrow={contentState.about.eyebrow}
 			title={contentState.about.title}
@@ -91,8 +58,7 @@
 			{contentState.site.availability}
 		</p>
 
-		<div class="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
-			<div class="about-left space-y-8">
+		<div class="about-left mx-auto mt-12 max-w-2xl space-y-8">
 				<div data-about-reveal>
 					<AboutAICore />
 				</div>
@@ -100,47 +66,7 @@
 				<AboutImpactMetrics />
 				<AboutCurrentFocus />
 			</div>
-
-			<div class="relative mt-4 md:mt-0">
-				<svg
-					class="pointer-events-none absolute top-0 bottom-0 left-3 hidden w-8 md:left-5 md:block"
-					viewBox="0 0 8 800"
-					preserveAspectRatio="none"
-					aria-hidden="true"
-				>
-					<path
-						bind:this={timelinePath}
-						d="M4,0 L4,800"
-						fill="none"
-						stroke="var(--accent-gold)"
-						stroke-width="2"
-						stroke-dasharray="4 6"
-						opacity="0.6"
-					/>
-				</svg>
-				<div
-					class="absolute top-0 bottom-0 left-3 w-px origin-top bg-gradient-to-b from-[var(--accent-gold)]/60 via-white/10 to-transparent md:left-5 md:hidden"
-					aria-hidden="true"
-				></div>
-
-				<ol class="relative space-y-0 pl-10 md:pl-14">
-					{#each journey as item, i}
-						<li data-timeline-item class="relative pb-14 last:pb-0">
-							<span
-								data-timeline-dot
-								class="absolute top-1.5 -left-[calc(2.5rem-4px)] h-2.5 w-2.5 rounded-full bg-[var(--accent-gold)] ring-4 ring-[var(--bg-secondary)] md:-left-[calc(3.5rem-4px)]"
-							></span>
-							<p class="font-mono text-xs tracking-widest text-[var(--accent-gold)]" data-editable={`journey.${i}.year`}>{item.year}</p>
-							<h3 class="mt-2 font-display text-2xl" data-editable={`journey.${i}.title`} style="color: var(--text-primary);">{item.title}</h3>
-							<p class="mt-3 max-w-xl leading-relaxed" data-editable={`journey.${i}.description`} style="color: var(--text-secondary);">
-								{item.description}
-							</p>
-						</li>
-					{/each}
-				</ol>
-			</div>
 		</div>
-	</div>
 </section>
 
 <style>

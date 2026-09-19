@@ -85,6 +85,8 @@
 									</svg>
 									<span class="logo-google__text">Google</span>
 								</span>
+							{:else}
+								<span class="logo-generic">{cert.issuer}</span>
 							{/if}
 						</div>
 						<span class="cert-year-pill flex-shrink-0">{cert.year}</span>

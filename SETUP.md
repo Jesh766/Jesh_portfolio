@@ -1,3 +1,5 @@
+It stores submissions in Supabase and sends a notification through Resend. No email provider key is exposed to the browser.
+Supabase stores the submission, and Resend must be configured for the form to report a successful email delivery.
 # Contact form
 
 The contact form posts to the server-side `/api/contact` endpoint. It stores submissions in Supabase and optionally sends a notification through Resend. No email provider key is exposed to the browser.
@@ -19,6 +21,8 @@ CONTACT_TO_EMAIL=you@example.com
 ```
 
 Restart the dev server after changing env vars.
+
+For the admin AI assistant, add a server-only `GEMINI_API_KEY`. The dashboard uses Analytics mode for questions; `/?editor=1` uses Editor mode for validated content changes. Never prefix this key with `PUBLIC_`.
 
 ## Microsoft Clarity analytics
 

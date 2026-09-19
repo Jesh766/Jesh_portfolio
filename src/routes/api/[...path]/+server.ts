@@ -83,6 +83,16 @@ async function handleContact(request: Request, getClientAddress: () => string): 
 	}
 
 	let notified = false;
+	if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) {
+		return json(
+			{
+				error: saved
+					? 'Message saved, but email notifications are not configured. Add RESEND_API_KEY and CONTACT_TO_EMAIL.'
+					: 'Contact email service is not configured.'
+			},
+			{ status: 503 }
+		);
+	}
 	if (env.RESEND_API_KEY && env.CONTACT_TO_EMAIL) {
 		try {
 			const response = await fetch('https://api.resend.com/emails', {
@@ -100,14 +110,21 @@ async function handleContact(request: Request, getClientAddress: () => string): 
 				})
 			});
 			if (!response.ok) {
-				console.error('resend response', response.status);
-				if (!saved) return json({ error: 'Unable to send message right now.' }, { status: 502 });
+				const details = await response.text().catch(() => '');
+				console.error('resend response', response.status, details);
+				return json(
+					{ error: saved ? 'Message saved, but the email notification could not be sent.' : 'Unable to send message right now.' },
+					{ status: 502 }
+				);
 			} else {
 				notified = true;
 			}
 		} catch (e) {
 			console.error('resend', e);
-			if (!saved) return json({ error: 'Unable to send message right now.' }, { status: 502 });
+			return json(
+				{ error: saved ? 'Message saved, but the email notification could not be sent.' : 'Unable to send message right now.' },
+				{ status: 502 }
+			);
 		}
 	}
 

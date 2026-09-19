@@ -274,26 +274,11 @@
 	z-index: 5;
 }
 
-.cert-card,
-.achievement-card {
+.cert-card {
 	background: var(--bg-card);
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);
 	border: 1px solid var(--border-subtle);
-}
-
-.achievement-card::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(145deg, rgba(201, 168, 76, 0.08), transparent 55%);
-	opacity: 0;
-	transition: opacity 0.45s ease;
-	pointer-events: none;
-}
-
-.achievement-card:hover::before {
-	opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -425,11 +410,6 @@
     font-size: 1rem;
   }
 
-  /* About timeline — reduce padding */
-  .about-year-deco {
-    font-size: 5rem;
-  }
-
   /* ── Skills ───────────────────────────────────────────── */
   /* Universe viz — cap height on mobile */
   .skill-viz-shell {
@@ -453,16 +433,6 @@
   /* ── Cert cards ───────────────────────────────────────── */
   .cert-card {
     padding: 1.5rem !important;
-  }
-
-  /* ── Journey timeline ─────────────────────────────────── */
-  .journey-item {
-    grid-template-columns: 2rem 1fr;
-    gap: 0 0.85rem;
-  }
-
-  .journey-content {
-    padding: 1rem !important;
   }
 
   /* ── Contact ──────────────────────────────────────────── */
@@ -595,14 +565,6 @@ html, body {
 
   .cert-card .display-heading {
     font-size: 0.95rem !important;
-  }
-}
-
-/* ── Journey / Achievements mobile ─────────────────────── */
-@media (max-width: 640px) {
-  .journey-item {
-    grid-template-columns: 1.5rem 1fr !important;
-    gap: 0 0.75rem !important;
   }
 }
 

@@ -30,7 +30,7 @@
 		const stopCursorSampling = startCursorSampling();
 
 		const cleanupSections = observeSections(
-			['about', 'skills', 'projects', 'certifications', 'achievements', 'contact'],
+			['about', 'skills', 'projects', 'certifications', 'contact'],
 			(section) => trackEvent({ event_type: 'section_view', section })
 		);
 

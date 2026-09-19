@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
+	import AssistantChat from '$lib/components/assistant/AssistantChat.svelte';
 	import {
-		ACHIEVEMENTS,
 		CERTIFICATIONS,
 		DEFAULT_ABOUT,
 		DEFAULT_HERO_ROLES,
@@ -13,18 +13,15 @@
 		HERO_STATS,
 		PROJECTS,
 		SITE,
-		SKILLS_CATEGORIZED,
-		TIMELINE
+		SKILLS_CATEGORIZED
 	} from '$lib/data/site';
 
 	type Project = {
 		id: string; title: string; tagline: string; tags: string[];
 		status: string; year: string; github: string; demo: string; metrics: { value: string; label: string }[]; featured?: boolean;
 	};
-	type JourneyItem = { year: string; title: string; description: string };
 	type SkillCategory = { category: string; icon: string; color: string; items: string[] };
 	type Certification = { title: string; issuer: string; issuerKey: string; url: string; year: string; note: string };
-	type Achievement = { title: string; description: string };
 	type ContactInfo = { email: string; phone: string; location: string; formTitle: string; formDescription: string; nameLabel: string; emailLabel: string; messageLabel: string; submitLabel: string; successMessage: string; errorMessage: string };
 
 	type Content = {
@@ -38,10 +35,8 @@
 		sections: typeof DEFAULT_SECTIONS;
 		footer: { name: string; description: string; copyright: string };
 		projects: Project[];
-		journey: JourneyItem[];
 		skills: SkillCategory[];
 		certifications: Certification[];
-		achievements: Achievement[];
 		contact: ContactInfo;
 	};
 
@@ -56,10 +51,8 @@
 		sections: structuredClone(DEFAULT_SECTIONS),
 		footer: { name: SITE.name, description: SITE.footerDescription ?? SITE.title, copyright: SITE.copyrightText ?? '© {year} · {title}' },
 		projects: structuredClone(PROJECTS as unknown as Project[]),
-		journey: structuredClone(TIMELINE as unknown as JourneyItem[]),
 		skills: structuredClone(SKILLS_CATEGORIZED as unknown as SkillCategory[]),
 		certifications: structuredClone(CERTIFICATIONS as unknown as Certification[]),
-		achievements: structuredClone(ACHIEVEMENTS as unknown as Achievement[]),
 		contact: { email: SITE.email, phone: SITE.phone, location: SITE.location, formTitle: 'Contact', formDescription: "Let's build something remarkable", nameLabel: 'Name', emailLabel: 'Email', messageLabel: 'Message', submitLabel: 'Send message', successMessage: "Message sent successfully. I'll get back to you soon.", errorMessage: 'Failed to send message. Please try again later.' }
 	};
 
@@ -85,10 +78,8 @@
 		{ id: 'hero', label: 'Hero' },
 		{ id: 'about', label: 'About' },
 		{ id: 'projects', label: 'Projects' },
-		{ id: 'journey', label: 'Journey' },
 		{ id: 'skills', label: 'Skills' },
 		{ id: 'certifications', label: 'Certifications' },
-		{ id: 'achievements', label: 'Achievements' },
 		{ id: 'contact', label: 'Contact' },
 		{ id: 'socials', label: 'Socials' },
 		{ id: 'footer', label: 'Footer' },
@@ -134,18 +125,12 @@
 			projects: Array.isArray(source.projects) && source.projects.length
 				? source.projects.map((p) => ({ ...emptyProject(), ...p, tags: Array.isArray(p.tags) ? p.tags : [] }))
 				: structuredClone(defaultContent.projects),
-			journey: Array.isArray(source.journey) && source.journey.length
-				? source.journey.map((j) => ({ ...emptyJourney(), ...j }))
-				: structuredClone(defaultContent.journey),
 			skills: Array.isArray(source.skills) && source.skills.length
 				? source.skills.map((s) => ({ ...emptySkillCategory(), ...s, items: Array.isArray(s.items) ? s.items : [] }))
 				: structuredClone(defaultContent.skills),
 			certifications: Array.isArray(source.certifications) && source.certifications.length
 				? source.certifications.map((c) => ({ ...emptyCertification(), ...c }))
 				: structuredClone(defaultContent.certifications),
-			achievements: Array.isArray(source.achievements) && source.achievements.length
-				? source.achievements.map((a) => ({ ...emptyAchievement(), ...a }))
-				: structuredClone(defaultContent.achievements),
 			contact: { ...defaultContent.contact, ...(source.contact ?? {}) }
 		};
 	}
@@ -172,17 +157,6 @@
 	function duplicateProject(index: number) { const copy = structuredClone(content.projects[index]); copy.id = `project-${Date.now()}`; content = { ...content, projects: [...content.projects.slice(0, index + 1), copy, ...content.projects.slice(index + 1)] }; dirty = true; }
 	function moveItem<T>(items: T[], index: number, direction: -1 | 1) { const next = index + direction; if (next < 0 || next >= items.length) return items; const copy = [...items]; [copy[index], copy[next]] = [copy[next], copy[index]]; return copy; }
 	function moveProject(index: number, direction: -1 | 1) { content = { ...content, projects: moveItem(content.projects, index, direction) }; dirty = true; }
-
-	// ---------- journey ----------
-	function emptyJourney(): JourneyItem { return { year: String(new Date().getFullYear()), title: 'New milestone', description: '' }; }
-	function updateJourney(index: number, key: keyof JourneyItem, value: string) {
-		content = { ...content, journey: content.journey.map((j, i) => i === index ? { ...j, [key]: value } : j) };
-		dirty = true;
-	}
-	function addJourney() { content = { ...content, journey: [...content.journey, emptyJourney()] }; dirty = true; }
-	function removeJourney(index: number) { if (!window.confirm('Delete this milestone from the draft content?')) return; content = { ...content, journey: content.journey.filter((_, i) => i !== index) }; dirty = true; }
-	function duplicateJourney(index: number) { content = { ...content, journey: [...content.journey.slice(0, index + 1), structuredClone(content.journey[index]), ...content.journey.slice(index + 1)] }; dirty = true; }
-	function moveJourney(index: number, direction: -1 | 1) { content = { ...content, journey: moveItem(content.journey, index, direction) }; dirty = true; }
 
 	// ---------- skills ----------
 	function emptySkillCategory(): SkillCategory { return { category: 'New category', icon: '◈', color: 'var(--accent-gold)', items: [] }; }
@@ -211,17 +185,6 @@
 	function removeCertification(index: number) { if (!window.confirm('Delete this certification from the draft content?')) return; content = { ...content, certifications: content.certifications.filter((_, i) => i !== index) }; dirty = true; }
 	function duplicateCertification(index: number) { content = { ...content, certifications: [...content.certifications.slice(0, index + 1), structuredClone(content.certifications[index]), ...content.certifications.slice(index + 1)] }; dirty = true; }
 	function moveCertification(index: number, direction: -1 | 1) { content = { ...content, certifications: moveItem(content.certifications, index, direction) }; dirty = true; }
-
-	// ---------- achievements ----------
-	function emptyAchievement(): Achievement { return { title: 'New achievement', description: '' }; }
-	function updateAchievement(index: number, key: keyof Achievement, value: string) {
-		content = { ...content, achievements: content.achievements.map((a, i) => i === index ? { ...a, [key]: value } : a) };
-		dirty = true;
-	}
-	function addAchievement() { content = { ...content, achievements: [...content.achievements, emptyAchievement()] }; dirty = true; }
-	function removeAchievement(index: number) { if (!window.confirm('Delete this achievement from the draft content?')) return; content = { ...content, achievements: content.achievements.filter((_, i) => i !== index) }; dirty = true; }
-	function duplicateAchievement(index: number) { content = { ...content, achievements: [...content.achievements.slice(0, index + 1), structuredClone(content.achievements[index]), ...content.achievements.slice(index + 1)] }; dirty = true; }
-	function moveAchievement(index: number, direction: -1 | 1) { content = { ...content, achievements: moveItem(content.achievements, index, direction) }; dirty = true; }
 
 	function updateHeroRole(index: number, value: string) { content = { ...content, heroRoles: content.heroRoles.map((item, i) => i === index ? value : item) }; dirty = true; }
 	function addHeroRole() { content = { ...content, heroRoles: [...content.heroRoles, 'New role'] }; dirty = true; }
@@ -341,6 +304,13 @@
 		return new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 	}
 
+	function applyAssistantContent(value: unknown) {
+		if (!value || typeof value !== 'object' || Array.isArray(value)) return;
+		content = normalizeContent(value as Partial<Content>);
+		dirty = true;
+		notice = 'AI update prepared. Review it, then publish changes.';
+	}
+
 	async function changeAnalyticsRange(range: number | 'all') {
 		selectedRange = range;
 		const query = range === 'all' ? 'range=all' : `days=${range}`;
@@ -375,6 +345,7 @@
 			<button onclick={signOut}>Sign out</button>
 		</div>
 	</header>
+	<div class="admin-assistant"><AssistantChat mode="analytics" analytics={analytics} content={content} /></div>
 
 	<nav class="tabs" aria-label="Admin sections">
 		{#each TABS as tab}
@@ -476,9 +447,6 @@
 						<label>Projects label<input value={content.site.projectsLabel ?? ''} oninput={(e) => updateSite('projectsLabel', e.currentTarget.value)} /></label>
 						<label>Projects heading<input value={content.site.projectsHeading ?? ''} oninput={(e) => updateSite('projectsHeading', e.currentTarget.value)} /></label>
 						<label class="wide">Projects intro<textarea rows="2" oninput={(e) => updateSite('projectsIntro', e.currentTarget.value)}>{content.site.projectsIntro ?? ''}</textarea></label>
-						<label>Journey label<input value={content.site.journeyTag ?? ''} oninput={(e) => updateSite('journeyTag', e.currentTarget.value)} /></label>
-						<label>Journey heading<input value={content.site.journeyTitle ?? ''} oninput={(e) => updateSite('journeyTitle', e.currentTarget.value)} /></label>
-						<label class="wide">Journey intro<textarea rows="2" oninput={(e) => updateSite('journeyIntro', e.currentTarget.value)}>{content.site.journeyIntro ?? ''}</textarea></label>
 						<label>Contact label<input value={content.site.contactLabel ?? ''} oninput={(e) => updateSite('contactLabel', e.currentTarget.value)} /></label>
 						<label>Contact heading<input value={content.site.contactHeading ?? ''} oninput={(e) => updateSite('contactHeading', e.currentTarget.value)} /></label>
 					</div>
@@ -551,24 +519,6 @@
 				</section>
 			{/if}
 
-			{#if activeTab === 'journey'}
-				<section class="panel editor-main">
-					<div class="panel-heading"><div><p class="admin-kicker">Timeline</p><h2>Journey</h2></div><button class="secondary" onclick={addJourney}>+ Add milestone</button></div>
-					<div class="project-editor-list">
-						{#each content.journey as item, index}
-							<article class="project-editor-card">
-								<div class="project-card-heading"><span class="project-index">{String(index + 1).padStart(2, '0')}</span><input class="project-name" value={item.title} aria-label="Milestone title" oninput={(e) => updateJourney(index, 'title', e.currentTarget.value)} /><button class="icon-button" onclick={() => moveJourney(index, -1)}>↑</button><button class="icon-button" onclick={() => moveJourney(index, 1)}>↓</button><button class="icon-button" onclick={() => duplicateJourney(index)}>Duplicate</button><button class="icon-button danger" onclick={() => removeJourney(index)}>Remove</button></div>
-								<div class="field-grid">
-									<label>Year<input value={item.year} oninput={(e) => updateJourney(index, 'year', e.currentTarget.value)} /></label>
-									<label class="wide">Description<textarea rows="3" oninput={(e) => updateJourney(index, 'description', e.currentTarget.value)}>{item.description}</textarea></label>
-								</div>
-							</article>
-						{/each}
-						{#if !content.journey.length}<div class="empty-state">No journey milestones yet.</div>{/if}
-					</div>
-				</section>
-			{/if}
-
 			{#if activeTab === 'skills'}
 				<section class="panel editor-main">
 					<div class="panel-heading"><div><p class="admin-kicker">Capabilities</p><h2>Skills</h2></div><button class="secondary" onclick={addSkillCategory}>+ Add category</button></div>
@@ -616,23 +566,6 @@
 				</section>
 			{/if}
 
-			{#if activeTab === 'achievements'}
-				<section class="panel editor-main">
-					<div class="panel-heading"><div><p class="admin-kicker">Highlights</p><h2>Achievements</h2></div><button class="secondary" onclick={addAchievement}>+ Add achievement</button></div>
-					<div class="project-editor-list">
-						{#each content.achievements as item, index}
-							<article class="project-editor-card">
-								<div class="project-card-heading"><span class="project-index">{String(index + 1).padStart(2, '0')}</span><input class="project-name" value={item.title} aria-label="Achievement title" oninput={(e) => updateAchievement(index, 'title', e.currentTarget.value)} /><button class="icon-button" onclick={() => moveAchievement(index, -1)}>↑</button><button class="icon-button" onclick={() => moveAchievement(index, 1)}>↓</button><button class="icon-button" onclick={() => duplicateAchievement(index)}>Duplicate</button><button class="icon-button danger" onclick={() => removeAchievement(index)}>Remove</button></div>
-								<div class="field-grid">
-									<label class="wide">Description<textarea rows="3" oninput={(e) => updateAchievement(index, 'description', e.currentTarget.value)}>{item.description}</textarea></label>
-								</div>
-							</article>
-						{/each}
-						{#if !content.achievements.length}<div class="empty-state">No achievements yet.</div>{/if}
-					</div>
-				</section>
-			{/if}
-
 			{#if activeTab === 'contact'}
 				<section class="panel editor-main">
 					<div class="panel-heading"><div><p class="admin-kicker">Reach you</p><h2>Contact details</h2></div></div>
@@ -668,6 +601,7 @@
 	.editor-layout { display: grid; gap: 1.5rem; }.panel { padding: 1.4rem; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.035); }.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.4rem; }label { display: grid; gap: .45rem; color: rgba(255,255,255,.7); font-size: .78rem; }label.wide { grid-column: 1 / -1; }input, textarea, select { width: 100%; padding: .78rem .85rem; border: 1px solid rgba(255,255,255,.14); border-radius: 2px; color: #fff; background: rgba(0,0,0,.25); font: inherit; }select option { background: #100d09; }textarea { resize: vertical; line-height: 1.5; }.section-heading { margin-top: 2.5rem; }
 	.draft-status { color: #8ee0bf; font-size: .75rem; }.draft-status.dirty { color: #f4c96b; }.project-editor-list { display: grid; gap: 1rem; margin-top: 1.5rem; }.project-editor-card { padding: 1.2rem; border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.18); }.project-card-heading { display: flex; align-items: center; gap: .8rem; }.project-index { color: #c9a84c; font-size: .75rem; }.project-name { flex: 1; font-size: 1.2rem; }.icon-button { border: 0; background: transparent; cursor: pointer; }.danger { color: #ff9b8d; }.primary { border: 0; padding: .75rem 1.1rem; background: #c9a84c; color: #080604; font-weight: 700; cursor: pointer; }.primary:disabled, .secondary:disabled { opacity: .45; cursor: wait; }.empty-state { padding: 2rem; text-align: center; color: rgba(255,255,255,.5); border: 1px dashed rgba(255,255,255,.15); }.publish-bar { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; padding: 1rem clamp(1rem, 4vw, 4rem); border-top: 1px solid rgba(255,255,255,.12); background: rgba(8,6,4,.94); backdrop-filter: blur(16px); }.success { color: #8ee0bf; }.error { color: #ff9b8d; }
 	.analytics-layout { display: grid; grid-template-columns: minmax(18rem, .65fr) minmax(0, 1.35fr); gap: 1.5rem; }.section-list div { display: flex; justify-content: space-between; padding: .85rem 0; border-bottom: 1px solid rgba(255,255,255,.1); }.section-list strong { color: #c9a84c; }
+	.admin-assistant { max-width: 90rem; margin: 0 auto 1rem; }
 	.analytics-header { grid-column: 1 / -1; display: flex; align-items: end; justify-content: space-between; gap: 1rem; padding: .25rem 0 .5rem; border-bottom: 1px solid rgba(116,214,177,.24); }
 	.analytics-eyebrow { margin: 0; color: #74d6b1; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; }
 	.analytics-header h2 { margin-top: .35rem; }

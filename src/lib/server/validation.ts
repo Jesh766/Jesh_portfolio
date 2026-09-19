@@ -145,7 +145,7 @@ export function validatePortfolioContent(value: unknown) {
 		!isRecord(value) ||
 		!hasOnlyKeys(value, [
 			'site', 'navigation', 'socials', 'heroRoles', 'heroStats', 'about', 'contact', 'seo', 'sections', 'footer',
-			'projects', 'journey', 'skills', 'certifications', 'achievements'
+			'projects', 'skills', 'certifications'
 		])
 	)
 		throw new RequestValidationError('Content has an invalid structure.');
@@ -167,7 +167,7 @@ export function validatePortfolioContent(value: unknown) {
 				'brand',
 				'url',
 				'portrait',
-				'resume', 'availability', 'projectsLabel', 'projectsHeading', 'projectsIntro', 'journeyTag', 'journeyTitle', 'journeyIntro', 'contactLabel', 'contactHeading', 'skillsLabel', 'skillsHeading', 'skillsIntro', 'certificationsLabel', 'certificationsHeading', 'certificationsIntro', 'footerDescription', 'copyrightText'
+				'resume', 'availability', 'projectsLabel', 'projectsHeading', 'projectsIntro', 'contactLabel', 'contactHeading', 'skillsLabel', 'skillsHeading', 'skillsIntro', 'certificationsLabel', 'certificationsHeading', 'certificationsIntro', 'footerDescription', 'copyrightText'
 			])
 		)
 			throw new RequestValidationError('Site content has an invalid structure.');
@@ -232,19 +232,6 @@ export function validatePortfolioContent(value: unknown) {
 	)
 		throw new RequestValidationError('Projects content has an invalid structure.');
 	if (
-		value.journey !== undefined &&
-		(!Array.isArray(value.journey) ||
-			value.journey.length > 50 ||
-			value.journey.some(
-				(item) =>
-					!isRecord(item) ||
-					!stringField(item.year, 20) ||
-					!stringField(item.title, 200) ||
-					!stringField(item.description, 2000)
-			))
-	)
-		throw new RequestValidationError('Journey content has an invalid structure.');
-	if (
 		value.skills !== undefined &&
 		(!Array.isArray(value.skills) ||
 			value.skills.length > 30 ||
@@ -269,30 +256,12 @@ export function validatePortfolioContent(value: unknown) {
 					!hasOnlyKeys(item, ['title', 'issuer', 'issuerKey', 'url', 'year', 'note']) ||
 					!stringField(item.title, 300) ||
 					!stringField(item.issuer, 120) ||
-					!['anthropic', 'be10x', 'deloitte', 'google'].includes(String(item.issuerKey)) ||
+					!stringField(item.issuerKey, 80) ||
 					!stringField(item.url, 2048) ||
 					!stringField(item.year, 20) ||
 					(item.note !== undefined && !stringField(item.note, 500))
 			))
 	)
 		throw new RequestValidationError('Certifications content has an invalid structure.');
-	if (
-		value.achievements !== undefined &&
-		(!Array.isArray(value.achievements) ||
-			value.achievements.length > 50 ||
-			value.achievements.some(
-				(item) =>
-					!isRecord(item) ||
-					!hasOnlyKeys(item, ['title', 'description', 'body', 'year', 'icon', 'accent']) ||
-					!stringField(item.title, 300) ||
-					!stringField(item.description, 2000) ||
-					(item.body !== undefined && !stringField(item.body, 2000)) ||
-					(item.year !== undefined && !stringField(item.year, 20)) ||
-					(item.icon !== undefined && !stringField(item.icon, 20)) ||
-					(item.accent !== undefined && !stringField(item.accent, 120))
-			))
-	)
-		throw new RequestValidationError('Achievements content has an invalid structure.');
-
 	return value;
 }

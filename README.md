@@ -26,9 +26,11 @@ Before deployment, set `PUBLIC_SITE_URL` to your live domain. Until then, the lo
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role (server only)                               |
 | `ADMIN_PASSWORD`            | Password for `/admin` (server only)                      |
 | `ADMIN_SESSION_SECRET`      | Long random secret used to sign the admin session cookie |
-| `RESEND_API_KEY`            | Optional — contact email via Resend                      |
-| `CONTACT_FROM_EMAIL`        | Verified Resend sender                                   |
+| `GEMINI_API_KEY`            | Server-only key for the admin AI assistant               |
+| `RESEND_API_KEY`            | Resend API key for contact email notifications            |
+| `CONTACT_FROM_EMAIL`        | Verified Resend sender, or `onboarding@resend.dev` locally |
 | `CONTACT_TO_EMAIL`          | Inbox for contact notifications                          |
+| `POST /api/contact` — validated server-side contact form; stores in Supabase and notifies through Resend
 
 ## Supabase
 
@@ -38,7 +40,7 @@ Before deployment, set `PUBLIC_SITE_URL` to your live domain. Until then, the lo
 
 ### Admin workspace
 
-Open `/admin` after deployment. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the server environment before signing in. The dashboard provides a visual editor for site identity, hero copy, and repeatable projects, with private drafts and an explicit publish action. Content is stored in the `portfolio_content` table and the dashboard shows session, page-view, section-view, duration, and coarse cursor-grid telemetry. The analytics tables retain IP address and user agent for operational abuse review; no raw cursor trails are stored and the dashboard does not display visitor IP addresses.
+Open `/admin` after deployment. Set `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, and `GEMINI_API_KEY` in the server environment before signing in. The dashboard assistant answers analytics questions; editor mode can prepare and publish validated content changes such as projects and certifications. Content is stored in the `portfolio_content` table and the dashboard shows session, page-view, section-view, duration, and coarse cursor-grid telemetry. The analytics tables retain IP address and user agent for operational abuse review; no raw cursor trails are stored and the dashboard does not display visitor IP addresses.
 
 Tables: `contact_submissions`, `analytics_events`, `resume_downloads`.
 

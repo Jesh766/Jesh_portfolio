@@ -18,9 +18,6 @@ export type SiteConfig = {
 	projectsLabel?: string;
 	projectsHeading?: string;
 	projectsIntro?: string;
-	journeyTag?: string;
-	journeyTitle?: string;
-	journeyIntro?: string;
 	contactLabel?: string;
 	contactHeading?: string;
 	skillsLabel?: string;
@@ -53,9 +50,6 @@ export const SITE: SiteConfig = {
 	projectsLabel: 'Projects',
 	projectsHeading: 'Featured work',
 	projectsIntro: 'Real projects with real code. Every card links to GitHub.',
-	journeyTag: 'Journey',
-	journeyTitle: 'Journey so far',
-	journeyIntro: "From first line of code to building AI-powered products — here's the path.",
 	contactLabel: 'Contact',
 	contactHeading: "Let's build something remarkable",
 	skillsLabel: 'Technical Skills',
@@ -107,10 +101,8 @@ export type PortfolioContent = {
 	sections: SectionSetting[];
 	footer: { name: string; description: string; copyright: string };
 	projects: Project[];
-	journey: TimelineEntry[];
 	skills: SkillCategory[];
 	certifications: Certification[];
-	achievements: Achievement[];
 };
 
 export const HERO_STATS: HeroStat[] = [
@@ -124,8 +116,7 @@ export const DEFAULT_NAVIGATION: NavigationItem[] = [
 	{ id: 'about', label: 'About', visible: true, order: 0 },
 	{ id: 'skills', label: 'Skills', visible: true, order: 1 },
 	{ id: 'projects', label: 'Projects', visible: true, order: 2 },
-	{ id: 'certifications', label: 'Certifications', visible: true, order: 3 },
-	{ id: 'achievements', label: 'Journey', visible: true, order: 4 }
+	{ id: 'certifications', label: 'Certifications', visible: true, order: 3 }
 ];
 export const DEFAULT_SOCIALS: SocialLink[] = [
 	{ id: 'linkedin', label: 'LinkedIn', href: SITE.linkedin, icon: 'linkedin', visible: true, order: 0 },
@@ -163,8 +154,7 @@ export const DEFAULT_SECTIONS: SectionSetting[] = [
 	{ id: 'skills', label: 'Skills', visible: true, order: 2 },
 	{ id: 'projects', label: 'Projects', visible: true, order: 3 },
 	{ id: 'certifications', label: 'Certifications', visible: true, order: 4 },
-	{ id: 'achievements', label: 'Journey', visible: true, order: 5 },
-	{ id: 'contact', label: 'Contact', visible: true, order: 6 }
+	{ id: 'contact', label: 'Contact', visible: true, order: 5 }
 ];
 export const DEFAULT_SEO: SEOContent = {
 	title: `${SITE.name} · ${SITE.title}`,
@@ -222,17 +212,10 @@ export const NAV = [
 	{ id: 'about', label: 'About' },
 	{ id: 'skills', label: 'Skills' },
 	{ id: 'projects', label: 'Projects' },
-	{ id: 'certifications', label: 'Certifications' },
-	{ id: 'achievements', label: 'Journey' }
+	{ id: 'certifications', label: 'Certifications' }
 ] as const;
 
 export const NAV_CONTACT = { id: 'contact', label: 'Contact' } as const;
-
-export type TimelineEntry = {
-	year: string;
-	title: string;
-	description: string;
-};
 
 export type SkillCategory = {
 	category: string;
@@ -244,19 +227,10 @@ export type SkillCategory = {
 export type Certification = {
 	title: string;
 	issuer: string;
-	issuerKey: 'anthropic' | 'be10x' | 'deloitte' | 'google';
+	issuerKey: string;
 	url: string;
 	year: string;
 	note?: string;
-};
-
-export type Achievement = {
-	title: string;
-	description: string;
-	body?: string;
-	year?: string;
-	icon?: string;
-	accent?: string;
 };
 
 export type Project = {
@@ -271,45 +245,6 @@ export type Project = {
 	metrics: Array<{ value: string; label: string }>;
 	featured: boolean;
 };
-
-export const TIMELINE: TimelineEntry[] = [
-	{
-		year: '2022',
-		title: 'GLS University',
-		description:
-			'Started BSc IT at GLS, Ahmedabad — diving into computer science, design thinking, and collaborative problem solving from day one.'
-	},
-	{
-		year: '2023',
-		title: 'First Web Projects',
-		description:
-			'Shipped responsive, accessible web experiences with modern HTML, CSS, and JavaScript. Built a foundation that actually runs in browsers.'
-	},
-	{
-		year: '2023',
-		title: 'AI Deep-Dive',
-		description:
-			'Explored LLMs, prompt engineering, and AI ethics. Earned certifications from Anthropic, Google, Be10x, and Deloitte × Forage to validate the learning.'
-	},
-	{
-		year: '2024',
-		title: 'SBS Hack The Gap',
-		description:
-			'Led Team The 5th Element at the hackathon — translated a raw idea into a working prototype with clear product storytelling under 24-hour pressure.'
-	},
-	{
-		year: '2024',
-		title: 'FarmSathi',
-		description:
-			'Co-built an agritech platform connecting smallholder farmers through a token-based equipment and labour sharing network. Research, design, and full-stack development.'
-	},
-	{
-		year: '2025',
-		title: 'AI Portfolio & Projects',
-		description:
-			'Built AI-powered tools, this portfolio, and more full-stack projects. Growing toward production systems and world-class product craft.'
-	}
-] as const;
 
 export const SKILLS_CATEGORIZED: SkillCategory[] = [
 	{
@@ -397,45 +332,6 @@ export const CERTIFICATIONS: Certification[] = [
 	}
 ] as const;
 
-export const ACHIEVEMENTS: Achievement[] = [
-	{
-		title: 'SBS Hack The Gap',
-		description:
-			'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
-		body: 'Led Team The 5th Element — took an idea from whiteboard to working demo in 24 hours. Delivered product storytelling strong enough to stand out in a competitive field.',
-		year: '2024',
-		icon: '🚀',
-		accent: 'var(--accent-gold)'
-	},
-	{
-		title: 'FarmSathi — Agritech Build',
-		description:
-			'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
-		body: 'Co-built a token-based equipment sharing platform for smallholder farmers. Handled research, UX, and full-stack development from zero to presentation.',
-		year: '2024',
-		icon: '🌾',
-		accent: 'var(--accent-teal)'
-	},
-	{
-		title: 'Team Leadership',
-		description:
-			'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
-		body: 'Led cross-functional teams across hackathon and project builds. Kept direction clear and execution sharp when deadlines compressed.',
-		year: '2023',
-		icon: '🤝',
-		accent: 'var(--accent-purple)'
-	},
-	{
-		title: '4 AI Certifications',
-		description:
-			'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
-		body: 'Validated AI knowledge through Anthropic, Google, Be10x, and Deloitte × Forage programs — covering LLMs, ethics, productivity, and applied analytics.',
-		year: '2026',
-		icon: '🧠',
-		accent: 'var(--accent-gold)'
-	}
-];
-
 export const PROJECTS: Project[] = [
 	{
 		id: 'farmsathi',
@@ -498,10 +394,8 @@ export const FARMSATHI = {
 /** Lowercase aliases for section components */
 export const site = SITE;
 export const navLinks = NAV.map((n) => ({ href: `#${n.id}`, label: n.label }));
-export const timeline = TIMELINE;
 export const skills = SKILLS;
 export const certifications = CERTIFICATIONS;
-export const achievements = ACHIEVEMENTS;
 export const farmsathiCaseStudy = {
 	title: FARMSATHI.title,
 	tagline: FARMSATHI.tagline,

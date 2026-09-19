@@ -1,5 +1,4 @@
 import type {
-	Achievement,
 	AboutContent,
 	Certification,
 	ContactContent,
@@ -11,11 +10,9 @@ import type {
 	SiteConfig,
 	SkillCategory,
 	SocialLink,
-	SectionSetting,
-	TimelineEntry
+	SectionSetting
 } from '$lib/data/site';
 import {
-	ACHIEVEMENTS,
 	CERTIFICATIONS,
 	DEFAULT_ABOUT,
 	DEFAULT_HERO_ROLES,
@@ -26,8 +23,7 @@ import {
 	HERO_STATS,
 	PROJECTS,
 	SITE,
-	SKILLS_CATEGORIZED,
-	TIMELINE
+	SKILLS_CATEGORIZED
 } from '$lib/data/site';
 
 export const contentState = $state<PortfolioContent>({
@@ -41,10 +37,8 @@ export const contentState = $state<PortfolioContent>({
 	sections: structuredClone(DEFAULT_SECTIONS),
 	footer: { name: SITE.name, description: SITE.footerDescription ?? SITE.title, copyright: SITE.copyrightText ?? '© {year} · {title}' },
 	projects: structuredClone(PROJECTS),
-	journey: structuredClone(TIMELINE),
 	skills: structuredClone(SKILLS_CATEGORIZED),
 	certifications: structuredClone(CERTIFICATIONS),
-	achievements: structuredClone(ACHIEVEMENTS),
 	contact: {
 		email: SITE.email,
 		phone: SITE.phone,
@@ -79,14 +73,10 @@ export async function loadPublishedContent() {
 		if (payload.content?.footer && typeof payload.content.footer === 'object') contentState.footer = { ...contentState.footer, ...payload.content.footer };
 		if (Array.isArray(payload.content?.projects))
 			contentState.projects = payload.content.projects as Project[];
-		if (Array.isArray(payload.content?.journey))
-			contentState.journey = payload.content.journey as TimelineEntry[];
 		if (Array.isArray(payload.content?.skills))
 			contentState.skills = payload.content.skills as SkillCategory[];
 		if (Array.isArray(payload.content?.certifications))
 			contentState.certifications = payload.content.certifications as Certification[];
-		if (Array.isArray(payload.content?.achievements))
-			contentState.achievements = payload.content.achievements as Achievement[];
 		if (payload.content?.contact && typeof payload.content.contact === 'object') {
 			contentState.contact = { ...contentState.contact, ...payload.content.contact } as ContactContent;
 		}
