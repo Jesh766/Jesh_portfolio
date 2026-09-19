@@ -8,6 +8,7 @@ export const prerender = false;
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_CONTEXT_BYTES = 180_000;
 const GEMINI_MODEL = env.GEMINI_MODEL || 'gemini-3.6-flash';
+const XAI_MODEL = env.XAI_MODEL || 'grok-3-mini';
 
 type AssistantMode = 'editor' | 'analytics';
 
@@ -40,6 +41,50 @@ function parseModelJson(text: string) {
 	return parsed;
 }
 
+async function requestGemini(prompt: string) {
+	const response = await fetch(
+		`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY ?? '')}`,
+		{
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				contents: [{ parts: [{ text: prompt }] }],
+				generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
+			})
+		}
+	);
+	if (!response.ok) throw new Error(`Gemini returned ${response.status}.`);
+	const payload = (await response.json()) as {
+		candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+	};
+	const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
+	if (!text) throw new Error('Gemini returned no answer.');
+	return text;
+}
+
+async function requestGrok(prompt: string) {
+	const response = await fetch('https://api.x.ai/v1/chat/completions', {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${env.XAI_API_KEY}`,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			model: XAI_MODEL,
+			messages: [{ role: 'user', content: prompt }],
+			temperature: 0.2,
+			response_format: { type: 'json_object' }
+		})
+	});
+	if (!response.ok) throw new Error(`Grok returned ${response.status}.`);
+	const payload = (await response.json()) as {
+		choices?: Array<{ message?: { content?: string } }>;
+	};
+	const text = payload.choices?.[0]?.message?.content;
+	if (!text) throw new Error('Grok returned no answer.');
+	return text;
+}
+
 export const POST: RequestHandler = async ({ cookies, request }) => {
 	if (!isAdminSession(cookies.get(ADMIN_COOKIE))) return json({ error: 'Unauthorized' }, { status: 401 });
 	if (!env.GEMINI_API_KEY) return json({ error: 'AI assistant is not configured. Add GEMINI_API_KEY to the server environment.' }, { status: 503 });
@@ -69,34 +114,19 @@ ${JSON.stringify(input.content ?? null)}
 Current analytics context:
 ${JSON.stringify(input.analytics ?? null)}`;
 
-	try {
-		const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY)}`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				contents: [{ parts: [{ text: prompt }] }],
-				generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
-			})
-		});
-		if (!response.ok) {
-			console.error('gemini response', response.status, await response.text());
-			return json({ error: 'The AI assistant could not complete that request.' }, { status: 502 });
-		}
-		const payload = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-		const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
-		if (!text) return json({ error: 'The AI assistant returned no answer.' }, { status: 502 });
-		const result = parseModelJson(text);
-		if (input.mode === 'editor') {
-			try {
+	const providers: Array<[string, (prompt: string) => Promise<string>]> = [['gemini', requestGemini]];
+	if (env.XAI_API_KEY) providers.push(['grok', requestGrok]);
+	for (const [provider, requestProvider] of providers) {
+		try {
+			const result = parseModelJson(await requestProvider(prompt));
+			if (input.mode === 'editor') {
 				validatePortfolioContent(result.content);
-			} catch {
-				return json({ error: 'The assistant suggested invalid portfolio content. Nothing was changed.' }, { status: 422 });
+				return json({ reply: result.reply, content: result.content, provider });
 			}
-			return json({ reply: result.reply, content: result.content });
+			return json({ reply: result.reply, provider });
+		} catch (error) {
+			console.error(`${provider} assistant`, error);
 		}
-		return json({ reply: result.reply });
-	} catch (error) {
-		console.error('admin assistant', error);
-		return json({ error: 'The AI assistant is temporarily unavailable.' }, { status: 502 });
 	}
+	return json({ error: 'The AI assistant could not complete that request.' }, { status: 502 });
 };

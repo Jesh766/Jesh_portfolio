@@ -28,6 +28,8 @@ Before deployment, set `PUBLIC_SITE_URL` to your live domain. Until then, the lo
 | `ADMIN_SESSION_SECRET`      | Long random secret used to sign the admin session cookie |
 | `GEMINI_API_KEY`            | Server-only key for the admin AI assistant               |
 | `GEMINI_MODEL`              | Optional Gemini model; defaults to `gemini-3.6-flash`   |
+| `XAI_API_KEY`               | Optional server-only Grok fallback key                  |
+| `XAI_MODEL`                 | Optional Grok model; defaults to `grok-3-mini`          |
 | `RESEND_API_KEY`            | Optional Resend API key for contact email notifications  |
 | `CONTACT_FROM_EMAIL`        | Verified Resend sender, or `onboarding@resend.dev` locally |
 | `CONTACT_TO_EMAIL`          | Inbox for contact notifications                          |

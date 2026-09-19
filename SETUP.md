@@ -22,7 +22,7 @@ CONTACT_TO_EMAIL=you@example.com
 
 Restart the dev server after changing env vars.
 
-For the admin AI assistant, add a server-only `GEMINI_API_KEY`. It uses `gemini-3.6-flash` by default; set `GEMINI_MODEL` to another supported model when needed. The dashboard uses Analytics mode for questions; `/?editor=1` uses Editor mode for validated content changes. Never prefix these keys with `PUBLIC_`.
+For the admin AI assistant, add a server-only `GEMINI_API_KEY`. It uses `gemini-3.6-flash` by default; set `GEMINI_MODEL` to another supported model when needed. You can also add `XAI_API_KEY` for automatic Grok fallback, with `XAI_MODEL` defaulting to `grok-3-mini`. The dashboard uses Analytics mode for questions; `/?editor=1` uses Editor mode for validated content changes. Never prefix these keys with `PUBLIC_`.
 
 ## Microsoft Clarity analytics
 
