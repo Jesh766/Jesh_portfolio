@@ -7,7 +7,7 @@ export const prerender = false;
 
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_CONTEXT_BYTES = 180_000;
-const GEMINI_MODEL = 'gemini-3.6-flash';
+const GEMINI_MODEL = env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 type AssistantMode = 'editor' | 'analytics';
 

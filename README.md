@@ -27,7 +27,8 @@ Before deployment, set `PUBLIC_SITE_URL` to your live domain. Until then, the lo
 | `ADMIN_PASSWORD`            | Password for `/admin` (server only)                      |
 | `ADMIN_SESSION_SECRET`      | Long random secret used to sign the admin session cookie |
 | `GEMINI_API_KEY`            | Server-only key for the admin AI assistant               |
-| `RESEND_API_KEY`            | Resend API key for contact email notifications            |
+| `GEMINI_MODEL`              | Optional Gemini model; defaults to `gemini-2.5-flash`   |
+| `RESEND_API_KEY`            | Optional Resend API key for contact email notifications  |
 | `CONTACT_FROM_EMAIL`        | Verified Resend sender, or `onboarding@resend.dev` locally |
 | `CONTACT_TO_EMAIL`          | Inbox for contact notifications                          |
 | `POST /api/contact` — validated server-side contact form; stores in Supabase and notifies through Resend

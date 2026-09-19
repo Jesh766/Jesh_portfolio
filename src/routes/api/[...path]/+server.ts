@@ -84,6 +84,7 @@ async function handleContact(request: Request, getClientAddress: () => string): 
 
 	let notified = false;
 	if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) {
+		if (saved) return json({ success: true, notified: false });
 		return json(
 			{
 				error: saved
@@ -112,6 +113,7 @@ async function handleContact(request: Request, getClientAddress: () => string): 
 			if (!response.ok) {
 				const details = await response.text().catch(() => '');
 				console.error('resend response', response.status, details);
+				if (saved) return json({ success: true, notified: false });
 				return json(
 					{ error: saved ? 'Message saved, but the email notification could not be sent.' : 'Unable to send message right now.' },
 					{ status: 502 }
@@ -121,6 +123,7 @@ async function handleContact(request: Request, getClientAddress: () => string): 
 			}
 		} catch (e) {
 			console.error('resend', e);
+			if (saved) return json({ success: true, notified: false });
 			return json(
 				{ error: saved ? 'Message saved, but the email notification could not be sent.' : 'Unable to send message right now.' },
 				{ status: 502 }
