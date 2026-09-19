@@ -34,3 +34,6 @@ credentials*.json
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.vercel
+.env*
