@@ -55,10 +55,12 @@
 	});
 </script>
 
-<div
-	bind:this={stage}
-	class="hero-stage relative mx-auto aspect-[4/5] w-full max-w-[22rem] sm:max-w-[26rem] md:max-w-[28rem] lg:max-w-[32rem] lg:aspect-[5/6]"
->
+
+<div class="hero-portrait-stage-shell">
+	<div
+		bind:this={stage}
+		class="hero-stage relative mx-auto aspect-[4/5] w-full max-w-[22rem] sm:max-w-[26rem] md:max-w-[28rem] lg:max-w-[32rem] lg:aspect-[5/6]"
+	>
 	<div
 		data-hero-depth
 		class="pointer-events-none absolute -inset-[8%] rounded-full blur-3xl"
@@ -85,6 +87,7 @@
 		/>
 	{/each}
 
+	</div>
 	<div class="hero-portrait-hint" aria-hidden="true">
 		<span class="hero-portrait-hint__ring"></span>
 		<span>Move over portrait</span>
