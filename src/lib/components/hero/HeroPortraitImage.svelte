@@ -45,6 +45,13 @@
 	let targetY = 38;
 	let targetR = 0;
 	let rafId: number;
+	let demoRafId: number;
+	let demoActive = $state(false);
+	let demoVisible = $state(false);
+	let demoFading = $state(false);
+	let demoX = $state(50);
+	let demoY = $state(38);
+	let demoFadeTimer: ReturnType<typeof setTimeout> | undefined;
 
 	function setTargetFromPoint(clientX: number, clientY: number) {
 		if (!clipEl) return;
@@ -67,6 +74,56 @@
 		if (t) setTargetFromPoint(t.clientX, t.clientY);
 	}
 
+	function stopAutoDemo() {
+		if (!demoActive) return;
+		demoActive = false;
+		demoFading = true;
+		cancelAnimationFrame(demoRafId);
+		targetR = 0;
+		window.removeEventListener('pointermove', stopAutoDemo);
+		window.removeEventListener('pointerdown', stopAutoDemo);
+		window.removeEventListener('touchstart', stopAutoDemo);
+		window.removeEventListener('click', stopAutoDemo);
+		clearTimeout(demoFadeTimer);
+		demoFadeTimer = setTimeout(() => {
+			demoVisible = false;
+			demoFading = false;
+		}, 500);
+	}
+
+	function runAutoDemo(startTime: number) {
+		if (!demoActive) return;
+		const progress = Math.min((performance.now() - startTime) / 5600, 1);
+		const angle = progress * Math.PI * 4;
+		demoX = 50 + Math.sin(angle) * 31;
+		demoY = 40 + Math.sin(angle * 2) * 20;
+		targetX = demoX;
+		targetY = demoY;
+		targetR = 38;
+		if (progress >= 1) {
+			stopAutoDemo();
+			return;
+		}
+		demoRafId = requestAnimationFrame(() => runAutoDemo(startTime));
+	}
+
+	function startAutoDemo() {
+		try {
+			if (sessionStorage.getItem('hero-demo-played')) return;
+			sessionStorage.setItem('hero-demo-played', 'true');
+		} catch {
+			return;
+		}
+		demoActive = true;
+		demoVisible = true;
+		demoFading = false;
+		window.addEventListener('pointermove', stopAutoDemo, { once: true });
+		window.addEventListener('pointerdown', stopAutoDemo, { once: true });
+		window.addEventListener('touchstart', stopAutoDemo, { once: true });
+		window.addEventListener('click', stopAutoDemo, { once: true });
+		demoRafId = requestAnimationFrame((time) => runAutoDemo(time));
+	}
+
 	function tick() {
 		curX += (targetX - curX) * 0.12;
 		curY += (targetY - curY) * 0.12;
@@ -87,6 +144,7 @@
 		}
 
 		rafId = requestAnimationFrame(tick);
+		startAutoDemo();
 		return () => cancelAnimationFrame(rafId);
 	});
 </script>
@@ -125,4 +183,13 @@
 	/>
 
 	<div class="hero-glass-rim pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+	{#if demoVisible}
+		<div
+			class="hero-auto-demo-dot"
+			class:hero-auto-demo-dot--fading={demoFading}
+			style="left: {demoX}%; top: {demoY}%;"
+			aria-hidden="true"
+		></div>
+	{/if}
 </div>
