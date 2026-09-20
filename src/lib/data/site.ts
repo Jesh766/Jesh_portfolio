@@ -207,7 +207,6 @@ export const ABOUT_VALUES = [
 export const ABOUT_TECH = ['HTML', 'CSS', 'JS', 'React', 'Node', 'AI'] as const;
 
 export const NAV = [
-	{ id: 'about', label: 'About' },
 	{ id: 'skills', label: 'Skills' },
 	{ id: 'projects', label: 'Projects' },
 	{ id: 'certifications', label: 'Certifications' }
