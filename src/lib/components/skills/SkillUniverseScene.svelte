@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { T, useTask } from '@threlte/core';
-	import { HTML } from '@threlte/extras';
 	import { SKILLS_CATEGORIZED } from '$lib/data/site';
 	import * as THREE from 'three';
 
@@ -19,9 +18,7 @@
 
 	const golden = new THREE.Color('#c4a574');
 	const charcoal = new THREE.Color('#1a1a1a');
-	const skills = SKILLS_CATEGORIZED.flatMap((category) =>
-		category.items.map((name) => ({ name, color: category.color }))
-	);
+	const skills = SKILLS_CATEGORIZED.flatMap((category) => category.items);
 
 	const nodes = skills.map((_, i) => {
 		const t = (i / skills.length) * Math.PI * 2;
@@ -125,36 +122,3 @@
 	{/each}
 </T.Group>
 
-{#each nodes as pos, i}
-	<HTML position={pos.toArray()} sprite distanceFactor={7} pointerEvents="none">
-		<span class="skill-universe-label" style={`--skill-label-color: ${skills[i].color};`}>
-			{skills[i].name}
-		</span>
-	</HTML>
-{/each}
-
-<style>
-	:global(.skill-universe-label) {
-		display: block;
-		padding: 0.18rem 0.38rem;
-		border: 1px solid color-mix(in srgb, var(--skill-label-color) 45%, transparent);
-		border-radius: 999px;
-		background: rgba(8, 6, 4, 0.78);
-		box-shadow: 0 0 0.8rem color-mix(in srgb, var(--skill-label-color) 22%, transparent);
-		color: var(--skill-label-color);
-		font-family: inherit;
-		font-size: clamp(0.48rem, 0.8vw, 0.65rem);
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		line-height: 1.1;
-		white-space: nowrap;
-		text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
-	}
-
-	@media (max-width: 640px) {
-		:global(.skill-universe-label) {
-			padding: 0.14rem 0.28rem;
-			font-size: 0.48rem;
-		}
-	}
-</style>
