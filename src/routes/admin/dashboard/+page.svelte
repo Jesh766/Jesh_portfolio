@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
-	import AssistantChat from '$lib/components/assistant/AssistantChat.svelte';
 	import {
 		CERTIFICATIONS,
 		DEFAULT_ABOUT,
@@ -345,8 +344,6 @@
 			<button onclick={signOut}>Sign out</button>
 		</div>
 	</header>
-	<div class="admin-assistant"><AssistantChat mode="analytics" analytics={analytics} content={content} /></div>
-
 	<nav class="tabs" aria-label="Admin sections">
 		{#each TABS as tab}
 			<button class:active={activeTab === tab.id} onclick={() => activeTab = tab.id}>{tab.label}</button>
@@ -601,7 +598,6 @@
 	.editor-layout { display: grid; gap: 1.5rem; }.panel { padding: 1.4rem; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.035); }.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.4rem; }label { display: grid; gap: .45rem; color: rgba(255,255,255,.7); font-size: .78rem; }label.wide { grid-column: 1 / -1; }input, textarea, select { width: 100%; padding: .78rem .85rem; border: 1px solid rgba(255,255,255,.14); border-radius: 2px; color: #fff; background: rgba(0,0,0,.25); font: inherit; }select option { background: #100d09; }textarea { resize: vertical; line-height: 1.5; }.section-heading { margin-top: 2.5rem; }
 	.draft-status { color: #8ee0bf; font-size: .75rem; }.draft-status.dirty { color: #f4c96b; }.project-editor-list { display: grid; gap: 1rem; margin-top: 1.5rem; }.project-editor-card { padding: 1.2rem; border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.18); }.project-card-heading { display: flex; align-items: center; gap: .8rem; }.project-index { color: #c9a84c; font-size: .75rem; }.project-name { flex: 1; font-size: 1.2rem; }.icon-button { border: 0; background: transparent; cursor: pointer; }.danger { color: #ff9b8d; }.primary { border: 0; padding: .75rem 1.1rem; background: #c9a84c; color: #080604; font-weight: 700; cursor: pointer; }.primary:disabled, .secondary:disabled { opacity: .45; cursor: wait; }.empty-state { padding: 2rem; text-align: center; color: rgba(255,255,255,.5); border: 1px dashed rgba(255,255,255,.15); }.publish-bar { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; padding: 1rem clamp(1rem, 4vw, 4rem); border-top: 1px solid rgba(255,255,255,.12); background: rgba(8,6,4,.94); backdrop-filter: blur(16px); }.success { color: #8ee0bf; }.error { color: #ff9b8d; }
 	.analytics-layout { display: grid; grid-template-columns: minmax(18rem, .65fr) minmax(0, 1.35fr); gap: 1.5rem; }.section-list div { display: flex; justify-content: space-between; padding: .85rem 0; border-bottom: 1px solid rgba(255,255,255,.1); }.section-list strong { color: #c9a84c; }
-	.admin-assistant { max-width: 90rem; margin: 0 auto 1rem; }
 	.analytics-header { grid-column: 1 / -1; display: flex; align-items: end; justify-content: space-between; gap: 1rem; padding: .25rem 0 .5rem; border-bottom: 1px solid rgba(116,214,177,.24); }
 	.analytics-eyebrow { margin: 0; color: #74d6b1; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; }
 	.analytics-header h2 { margin-top: .35rem; }

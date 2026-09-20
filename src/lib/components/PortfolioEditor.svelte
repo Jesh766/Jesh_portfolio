@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { contentState } from '$lib/stores/content.svelte';
 	import type { Certification, Project } from '$lib/data/site';
-	import AssistantChat from '$lib/components/assistant/AssistantChat.svelte';
 
 	let enabled = $state(false);
 	let status = $state('Editor inactive');
@@ -173,13 +172,6 @@
 		await persistEdits();
 	}
 
-	async function applyAssistantContent(value: unknown) {
-		if (!value || typeof value !== 'object' || Array.isArray(value)) return;
-		Object.assign(contentState, value);
-		status = 'Saving AI update...';
-		await persistEdits();
-	}
-
 	async function verifyAdminSession() {
 		try {
 			const response = await fetch('/api/admin', { method: 'GET' });
@@ -225,7 +217,6 @@
 
 {#if enabled}
 	<div class="portfolio-editor-panel" aria-live="polite">
-		<AssistantChat mode="editor" content={contentState} onApplyContent={applyAssistantContent} />
 		<div class="portfolio-editor-heading">
 			<p class="portfolio-editor-kicker">Editor mode</p>
 			<h3>Portfolio controls</h3>
