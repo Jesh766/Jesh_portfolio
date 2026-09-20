@@ -83,6 +83,17 @@
 
 		<!-- Desktop nav links -->
 		<ul class="nav-links" role="list">
+			<li>
+				<a
+					href="#hero"
+					data-cursor-hover
+					data-cursor-link
+					class="nav-link"
+					class:nav-link--active={activeSection === 'hero'}
+				>
+					About
+				</a>
+			</li>
 			{#each navigation as item}
 				<li>
 					<a
@@ -147,6 +158,16 @@
 
 	<nav class="mobile-nav" aria-label="Mobile navigation">
 		<ul class="mobile-nav__list" role="list">
+			<li>
+				<a
+					href="#hero"
+					class="mobile-nav__link"
+					class:mobile-nav__link--active={activeSection === 'hero'}
+					onclick={closeMenu}
+				>
+					About
+				</a>
+			</li>
 			{#each navigation as item}
 				<li>
 					<a
