@@ -93,7 +93,7 @@
 
 	function runAutoDemo(startTime: number) {
 		if (!demoActive) return;
-		const progress = Math.min((performance.now() - startTime) / 5600, 1);
+		const progress = Math.min((performance.now() - startTime) / 7000, 1);
 		const angle = progress * Math.PI * 4;
 		demoX = 50 + Math.sin(angle) * 31;
 		demoY = 40 + Math.sin(angle * 2) * 20;
@@ -135,11 +135,13 @@
 		reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		if (reducedMotion) {
-			// No animated reveal for reduced-motion users — show a soft,
-			// static hint of the glass layer instead of a moving mask.
+			// Keep a static preview visible without scripted movement.
 			curX = targetX = 50;
 			curY = targetY = 38;
 			curR = targetR = 22;
+			demoX = 50;
+			demoY = 38;
+			demoVisible = true;
 			return;
 		}
 
