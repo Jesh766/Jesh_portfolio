@@ -5,8 +5,8 @@
 
 	const navigation = $derived(
 		contentState.navigation.length
-			? contentState.navigation.filter((item) => item.visible && item.id !== 'about').sort((a, b) => a.order - b.order)
-			: NAV.filter((item) => item.id !== 'about').map((item, order) => ({ ...item, visible: true, order }))
+			? contentState.navigation.filter((item) => item.visible).sort((a, b) => a.order - b.order)
+			: NAV.map((item, order) => ({ ...item, visible: true, order }))
 	);
 
 	async function downloadResume() {

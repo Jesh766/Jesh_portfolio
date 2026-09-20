@@ -108,12 +108,6 @@
 	}
 
 	function startAutoDemo() {
-		try {
-			if (sessionStorage.getItem('hero-demo-played')) return;
-			sessionStorage.setItem('hero-demo-played', 'true');
-		} catch {
-			return;
-		}
 		demoActive = true;
 		demoVisible = true;
 		demoFading = false;
