@@ -84,4 +84,9 @@
 			floatDuration={card.floatDuration}
 		/>
 	{/each}
+
+	<div class="hero-portrait-hint" aria-hidden="true">
+		<span class="hero-portrait-hint__ring"></span>
+		<span>Move over portrait</span>
+	</div>
 </div>
