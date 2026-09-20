@@ -113,10 +113,9 @@ export const HERO_STATS: HeroStat[] = [
 ];
 
 export const DEFAULT_NAVIGATION: NavigationItem[] = [
-	{ id: 'about', label: 'About', visible: true, order: 0 },
-	{ id: 'skills', label: 'Skills', visible: true, order: 1 },
-	{ id: 'projects', label: 'Projects', visible: true, order: 2 },
-	{ id: 'certifications', label: 'Certifications', visible: true, order: 3 }
+	{ id: 'skills', label: 'Skills', visible: true, order: 0 },
+	{ id: 'projects', label: 'Projects', visible: true, order: 1 },
+	{ id: 'certifications', label: 'Certifications', visible: true, order: 2 }
 ];
 export const DEFAULT_SOCIALS: SocialLink[] = [
 	{ id: 'linkedin', label: 'LinkedIn', href: SITE.linkedin, icon: 'linkedin', visible: true, order: 0 },
@@ -150,11 +149,10 @@ export const DEFAULT_ABOUT: AboutContent = {
 };
 export const DEFAULT_SECTIONS: SectionSetting[] = [
 	{ id: 'hero', label: 'Hero', visible: true, order: 0 },
-	{ id: 'about', label: 'About', visible: true, order: 1 },
-	{ id: 'skills', label: 'Skills', visible: true, order: 2 },
-	{ id: 'projects', label: 'Projects', visible: true, order: 3 },
-	{ id: 'certifications', label: 'Certifications', visible: true, order: 4 },
-	{ id: 'contact', label: 'Contact', visible: true, order: 5 }
+	{ id: 'skills', label: 'Skills', visible: true, order: 1 },
+	{ id: 'projects', label: 'Projects', visible: true, order: 2 },
+	{ id: 'certifications', label: 'Certifications', visible: true, order: 3 },
+	{ id: 'contact', label: 'Contact', visible: true, order: 4 }
 ];
 export const DEFAULT_SEO: SEOContent = {
 	title: `${SITE.name} · ${SITE.title}`,

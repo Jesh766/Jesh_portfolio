@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Hero from '$lib/components/Hero.svelte';
-	import About from '$lib/components/About.svelte';
 	import Skills from '$lib/components/Skills.svelte';
 	import Projects from '$lib/components/Projects.svelte';
 	import Certifications from '$lib/components/Certifications.svelte';
@@ -32,7 +31,6 @@
 </svelte:head>
 
 {#if sectionVisible('hero')}<Hero />{/if}
-{#if sectionVisible('about')}<About />{/if}
 {#if sectionVisible('skills')}<Skills />{/if}
 {#if sectionVisible('projects')}<Projects />{/if}
 {#if sectionVisible('certifications')}<Certifications />{/if}
