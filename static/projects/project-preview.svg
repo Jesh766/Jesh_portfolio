@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" role="img" aria-labelledby="title desc">
+  <title id="title">Project preview placeholder</title>
+  <desc id="desc">Temporary preview image. Replace this path with a project's real homepage screenshot.</desc>
+  <rect width="1600" height="800" fill="#141311"/>
+  <rect x="32" y="32" width="1536" height="736" rx="28" fill="#211f1b" stroke="#6b5724" stroke-width="2"/>
+  <circle cx="92" cy="92" r="12" fill="#d97777"/>
+  <circle cx="132" cy="92" r="12" fill="#d3ad4f"/>
+  <circle cx="172" cy="92" r="12" fill="#7eb27b"/>
+  <text x="800" y="410" text-anchor="middle" fill="#f0eadc" font-family="Georgia, serif" font-size="68">Project preview</text>
+  <text x="800" y="485" text-anchor="middle" fill="#b6a98b" font-family="Arial, sans-serif" font-size="26">Add a real homepage screenshot from the admin editor.</text>
+</svg>

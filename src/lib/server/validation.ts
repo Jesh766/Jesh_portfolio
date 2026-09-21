@@ -28,6 +28,18 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+export function normalizePortfolioContent(value: unknown) {
+	if (!isRecord(value) || !Array.isArray(value.projects)) return value;
+	return {
+		...value,
+		projects: value.projects.map((project) =>
+			isRecord(project) && typeof project.image !== 'string'
+				? { ...project, image: '/projects/project-preview.svg' }
+				: project
+		)
+	};
+}
+
 export function validateContactPayload(value: unknown) {
 	if (!isRecord(value)) throw new RequestValidationError('Request body must be an object.');
 	const name = typeof value.name === 'string' ? value.name.trim() : '';

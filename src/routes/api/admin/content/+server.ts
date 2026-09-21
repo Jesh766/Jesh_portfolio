@@ -2,6 +2,7 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { getSupabaseAdmin } from '$lib/server/supabase';
 import { ADMIN_COOKIE, isAdminSession } from '$lib/server/admin';
 import {
+	normalizePortfolioContent,
 	RequestValidationError,
 	readJsonBody,
 	validatePortfolioContent
@@ -23,7 +24,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 		.eq('id', 'default')
 		.maybeSingle();
 	if (error) return json({ error: 'Unable to load content.' }, { status: 500 });
-	return json(data ?? { content: {}, draft_content: null, updated_at: null });
+	return json(data ? { ...data, content: normalizePortfolioContent(data.content), draft_content: normalizePortfolioContent(data.draft_content) } : { content: {}, draft_content: null, updated_at: null });
 };
 
 export const PUT: RequestHandler = async ({ cookies, request }) => {
@@ -42,7 +43,7 @@ export const PUT: RequestHandler = async ({ cookies, request }) => {
 	const requestBody = body as Record<string, unknown>;
 	let content: unknown;
 	try {
-		content = validatePortfolioContent(requestBody.content);
+		content = validatePortfolioContent(normalizePortfolioContent(requestBody.content));
 	} catch (error) {
 		return json(
 			{ error: error instanceof RequestValidationError ? error.message : 'Invalid content.' },
