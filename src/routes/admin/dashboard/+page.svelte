@@ -16,7 +16,7 @@
 	} from '$lib/data/site';
 
 	type Project = {
-		id: string; title: string; tagline: string; tags: string[];
+		id: string; title: string; tagline: string; image: string; tags: string[];
 		status: string; year: string; github: string; demo: string; metrics: { value: string; label: string }[]; featured?: boolean;
 	};
 	type SkillCategory = { category: string; icon: string; color: string; items: string[] };
@@ -142,7 +142,7 @@
 
 	// ---------- projects ----------
 	function emptyProject(): Project {
-		return { id: `project-${Date.now()}`, title: 'New project', tagline: '', tags: [], status: 'In progress', year: String(new Date().getFullYear()), github: '', demo: '', metrics: [], featured: false };
+		return { id: `project-${Date.now()}`, title: 'New project', tagline: '', image: '/projects/project-preview.png', tags: [], status: 'In progress', year: String(new Date().getFullYear()), github: '', demo: '', metrics: [], featured: false };
 	}
 	function updateProject(index: number, key: keyof Project, value: string | boolean | string[]) {
 		content = { ...content, projects: content.projects.map((p, i) => i === index ? { ...p, [key]: value } : p) };
@@ -151,7 +151,7 @@
 	function updateTags(index: number, value: string) {
 		updateProject(index, 'tags', value.split(',').map((t) => t.trim()).filter(Boolean));
 	}
-	function addProject() { content = { ...content, projects: [...content.projects, emptyProject()] }; dirty = true; }
+	function addProject() { content = { ...content, projects: [emptyProject(), ...content.projects] }; dirty = true; }
 	function removeProject(index: number) { if (!window.confirm('Delete this project from the draft content?')) return; content = { ...content, projects: content.projects.filter((_, i) => i !== index) }; dirty = true; }
 	function duplicateProject(index: number) { const copy = structuredClone(content.projects[index]); copy.id = `project-${Date.now()}`; content = { ...content, projects: [...content.projects.slice(0, index + 1), copy, ...content.projects.slice(index + 1)] }; dirty = true; }
 	function moveItem<T>(items: T[], index: number, direction: -1 | 1) { const next = index + direction; if (next < 0 || next >= items.length) return items; const copy = [...items]; [copy[index], copy[next]] = [copy[next], copy[index]]; return copy; }
@@ -180,7 +180,7 @@
 		content = { ...content, certifications: content.certifications.map((c, i) => i === index ? { ...c, [key]: value } : c) };
 		dirty = true;
 	}
-	function addCertification() { content = { ...content, certifications: [...content.certifications, emptyCertification()] }; dirty = true; }
+	function addCertification() { content = { ...content, certifications: [emptyCertification(), ...content.certifications] }; dirty = true; }
 	function removeCertification(index: number) { if (!window.confirm('Delete this certification from the draft content?')) return; content = { ...content, certifications: content.certifications.filter((_, i) => i !== index) }; dirty = true; }
 	function duplicateCertification(index: number) { content = { ...content, certifications: [...content.certifications.slice(0, index + 1), structuredClone(content.certifications[index]), ...content.certifications.slice(index + 1)] }; dirty = true; }
 	function moveCertification(index: number, direction: -1 | 1) { content = { ...content, certifications: moveItem(content.certifications, index, direction) }; dirty = true; }
@@ -502,6 +502,7 @@
 								<div class="project-card-heading"><span class="project-index">{String(index + 1).padStart(2, '0')}</span><input class="project-name" value={project.title} aria-label="Project title" oninput={(e) => updateProject(index, 'title', e.currentTarget.value)} /><button class="icon-button" title="Move up" onclick={() => moveProject(index, -1)}>↑</button><button class="icon-button" title="Move down" onclick={() => moveProject(index, 1)}>↓</button><button class="icon-button" onclick={() => duplicateProject(index)}>Duplicate</button><button class="icon-button danger" title="Remove project" onclick={() => removeProject(index)}>Remove</button></div>
 								<div class="field-grid">
 									<label>Short description<textarea rows="3" oninput={(e) => updateProject(index, 'tagline', e.currentTarget.value)}>{project.tagline}</textarea></label>
+									<label>Preview image path<input value={project.image} oninput={(e) => updateProject(index, 'image', e.currentTarget.value)} /></label>
 									<label>Status<input value={project.status} oninput={(e) => updateProject(index, 'status', e.currentTarget.value)} /></label>
 									<label>Year<input value={project.year} oninput={(e) => updateProject(index, 'year', e.currentTarget.value)} /></label>
 									<label>Tags<input value={project.tags.join(', ')} oninput={(e) => updateTags(index, e.currentTarget.value)} /></label>

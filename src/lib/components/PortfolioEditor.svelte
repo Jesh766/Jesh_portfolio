@@ -128,7 +128,7 @@
 	}
 
 	async function addProject() {
-		contentState.projects = [...contentState.projects, createProject()];
+		contentState.projects = [createProject(), ...contentState.projects];
 		projectsOpen = true;
 		status = 'Saving...';
 		await persistEdits();
@@ -148,12 +148,22 @@
 		await persistEdits();
 	}
 
+	async function moveProject(index: number, direction: -1 | 1) {
+		const next = index + direction;
+		if (next < 0 || next >= contentState.projects.length) return;
+		const projects = [...contentState.projects];
+		[projects[index], projects[next]] = [projects[next], projects[index]];
+		contentState.projects = projects;
+		status = 'Saving...';
+		await persistEdits();
+	}
+
 	function createCertification(): Certification {
 		return { title: 'New certification', issuer: 'Issuer name', issuerKey: 'google', url: 'https://', year: String(new Date().getFullYear()), note: '', logoUrl: '' };
 	}
 
 	async function addCertification() {
-		contentState.certifications = [...contentState.certifications, createCertification()];
+		contentState.certifications = [createCertification(), ...contentState.certifications];
 		certificationsOpen = true;
 		status = 'Saving...';
 		await persistEdits();
@@ -169,6 +179,16 @@
 
 	async function updateCertification(index: number, key: keyof Certification, value: string) {
 		contentState.certifications = contentState.certifications.map((certification, certificationIndex) => certificationIndex === index ? { ...certification, [key]: value } : certification);
+		status = 'Saving...';
+		await persistEdits();
+	}
+
+	async function moveCertification(index: number, direction: -1 | 1) {
+		const next = index + direction;
+		if (next < 0 || next >= contentState.certifications.length) return;
+		const certifications = [...contentState.certifications];
+		[certifications[index], certifications[next]] = [certifications[next], certifications[index]];
+		contentState.certifications = certifications;
 		status = 'Saving...';
 		await persistEdits();
 	}
@@ -242,7 +262,7 @@
 				</div>
 				{#each contentState.projects as project, index}
 					<article class="portfolio-editor-card">
-						<div class="portfolio-editor-card__header"><span class="portfolio-editor-index">{String(index + 1).padStart(2, '0')}</span><strong>{project.title || 'Untitled project'}</strong><button class="portfolio-editor-delete" type="button" onclick={() => removeProject(index)}>Delete</button></div>
+						<div class="portfolio-editor-card__header"><span class="portfolio-editor-index">{String(index + 1).padStart(2, '0')}</span><strong>{project.title || 'Untitled project'}</strong><button class="portfolio-editor-project-toggle" type="button" title="Move project up" aria-label="Move project up" disabled={index === 0} onclick={() => moveProject(index, -1)}>↑</button><button class="portfolio-editor-project-toggle" type="button" title="Move project down" aria-label="Move project down" disabled={index === contentState.projects.length - 1} onclick={() => moveProject(index, 1)}>↓</button><button class="portfolio-editor-delete" type="button" onclick={() => removeProject(index)}>Delete</button></div>
 						<div class="portfolio-editor-fields">
 							<label>Project title<input value={project.title} oninput={(event) => updateProject(index, 'title', event.currentTarget.value)} /></label>
 							<label>Year<input value={project.year} oninput={(event) => updateProject(index, 'year', event.currentTarget.value)} /></label>
@@ -267,7 +287,7 @@
 				</div>
 				{#each contentState.certifications as certification, index}
 					<article class="portfolio-editor-card">
-						<div class="portfolio-editor-card__header"><span class="portfolio-editor-index">{String(index + 1).padStart(2, '0')}</span><strong>{certification.title || 'Untitled certification'}</strong><button class="portfolio-editor-delete" type="button" onclick={() => removeCertification(index)}>Delete</button></div>
+						<div class="portfolio-editor-card__header"><span class="portfolio-editor-index">{String(index + 1).padStart(2, '0')}</span><strong>{certification.title || 'Untitled certification'}</strong><button class="portfolio-editor-project-toggle" type="button" title="Move certification up" aria-label="Move certification up" disabled={index === 0} onclick={() => moveCertification(index, -1)}>↑</button><button class="portfolio-editor-project-toggle" type="button" title="Move certification down" aria-label="Move certification down" disabled={index === contentState.certifications.length - 1} onclick={() => moveCertification(index, 1)}>↓</button><button class="portfolio-editor-delete" type="button" onclick={() => removeCertification(index)}>Delete</button></div>
 						<div class="portfolio-editor-fields">
 							<label>Certificate title<input value={certification.title} oninput={(event) => updateCertification(index, 'title', event.currentTarget.value)} /></label>
 							<label>Issuer<input value={certification.issuer} oninput={(event) => updateCertification(index, 'issuer', event.currentTarget.value)} /></label>
