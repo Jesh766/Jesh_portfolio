@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
 	let {
@@ -18,11 +17,6 @@
 	let shown = $state('');
 
 	$effect(() => {
-		if (display) shown = display;
-		else if (!shown) shown = `0${suffix}`;
-	});
-
-	onMount(() => {
 		if (!root) return;
 		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -32,7 +26,7 @@
 		}
 
 		const obj = { n: 0 };
-		gsap.to(obj, {
+		const tween = gsap.to(obj, {
 			n: value,
 			duration: 2,
 			ease: 'power2.out',
@@ -41,6 +35,7 @@
 				shown = `${Math.round(obj.n)}${suffix}`;
 			}
 		});
+		return () => tween.kill();
 	});
 </script>
 
