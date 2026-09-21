@@ -75,10 +75,7 @@
 			aria-label="Jayshil's Portfolio — home"
 			onclick={closeMenu}
 		>
-			<span class="nav-brand__text">
-				Jayshil<span class="nav-brand__accent">'s</span> Portfolio
-			</span>
-			<span class="nav-brand__mark" aria-hidden="true"></span>
+			<img class="nav-brand__wordmark" src="/brand/jayshil-wordmark.svg" alt="Jayshil Thakkar" />
 		</a>
 
 		<!-- Desktop nav links -->
@@ -239,34 +236,18 @@
 		position: relative;
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
 		flex-shrink: 0;
 		text-decoration: none;
-		padding-right: 0.35rem;
 	}
 
-	.nav-brand__text {
-		font-family: var(--font-display);
-		font-size: clamp(0.95rem, 2.8vw, 1.15rem);
-		font-weight: 500;
-		letter-spacing: 0.03em;
-		color: var(--text-primary);
-		line-height: 1.2;
-		white-space: nowrap;
+	.nav-brand__wordmark {
+		display: block;
+		width: clamp(8.75rem, 31vw, 11.5rem);
+		height: auto;
 	}
 
-	.nav-brand__accent {
-		color: var(--accent-gold);
-		font-style: italic;
-	}
-
-	.nav-brand__mark {
-		width: 5px;
-		height: 5px;
-		border-radius: 50%;
-		background: var(--accent-gold);
-		box-shadow: 0 0 12px rgba(201, 168, 76, 0.65);
-		flex-shrink: 0;
+	.nav-brand:hover .nav-brand__wordmark {
+		filter: drop-shadow(0 0 10px rgba(201, 168, 76, 0.16));
 	}
 
 	/* ── Desktop nav links (hidden on mobile) ─────────────── */
