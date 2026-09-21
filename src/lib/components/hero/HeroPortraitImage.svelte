@@ -147,7 +147,7 @@
 
 <div
 	bind:this={clipEl}
-	class="hero-portrait-clip relative z-10 w-full overflow-hidden will-change-transform"
+	class="hero-portrait-clip relative z-10 w-full touch-none overflow-hidden will-change-transform"
 	style="transform: perspective(1400px) rotateX({tiltX}deg) rotateY({tiltY}deg); --reveal-x: {curX}%; --reveal-y: {curY}%; --reveal-r: {curR}%;"
 	onpointermove={onPointerMove}
 	onpointerleave={onPointerLeave}

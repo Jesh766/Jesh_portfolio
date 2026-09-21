@@ -64,9 +64,9 @@
 	});
 </script>
 
-<div bind:this={wrap} class="skill-universe absolute inset-0 h-full min-h-[400px] w-full flex-1">
+<div bind:this={wrap} class="skill-universe absolute inset-0 h-full min-h-0 w-full touch-none flex-1">
 	{#if browser && ready}
-		<div class="skill-universe-canvas absolute inset-0 h-full min-h-[400px] w-full">
+		<div class="skill-universe-canvas absolute inset-0 h-full min-h-0 w-full">
 			<Canvas>
 				<SkillUniverseScene bind:activeIndex {mouse} {reduced} />
 			</Canvas>
@@ -95,7 +95,7 @@
 
 	@media (max-width: 640px) {
 		.skill-universe-canvas {
-			min-height: 360px;
+			min-height: 0;
 		}
 	}
 </style>

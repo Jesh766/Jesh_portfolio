@@ -411,9 +411,31 @@
   }
 
   /* ── Skills ───────────────────────────────────────────── */
-  /* Universe viz — cap height on mobile */
+  .skill-category-card,
+  .active-tool-chip {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .skill-category-card ul,
+  .active-tool-chip span {
+    min-width: 0;
+  }
+
+  .active-tool-chip span {
+    overflow-wrap: anywhere;
+  }
+
+  /* Keep the canvas inside the card instead of forcing a taller child. */
   .skill-viz-shell {
-    min-height: 300px !important;
+    min-height: clamp(18rem, 78vw, 22rem) !important;
+    height: clamp(18rem, 78vw, 22rem) !important;
+  }
+
+  .skill-universe,
+  .skill-universe-canvas {
+    min-height: 0 !important;
+    height: 100% !important;
   }
 
   /* ── Projects ─────────────────────────────────────────── */
@@ -546,14 +568,6 @@ html, body {
 @media (max-width: 640px) {
   .about-info-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-/* ── Skills section fix ─────────────────────────────────── */
-@media (max-width: 640px) {
-  .skill-viz-shell {
-    min-height: 260px !important;
-    height: 260px !important;
   }
 }
 
