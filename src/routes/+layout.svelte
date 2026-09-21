@@ -23,8 +23,14 @@
 	let { children } = $props();
 
 	onMount(() => {
-		void loadPublishedContent();
-		if (window.location.pathname.startsWith('/admin')) return;
+		const isAdmin = window.location.pathname.startsWith('/admin');
+		const refreshPublishedContent = () => {
+			if (!isAdmin) void loadPublishedContent();
+		};
+		refreshPublishedContent();
+		if (isAdmin) return;
+		window.addEventListener('focus', refreshPublishedContent);
+		document.addEventListener('visibilitychange', refreshPublishedContent);
 		trackEvent({ event_type: 'page_view', path: window.location.pathname });
 		const stopSessionTracking = startSessionTracking();
 		const stopCursorSampling = startCursorSampling();
@@ -76,6 +82,8 @@
 		}
 
 		return () => {
+			window.removeEventListener('focus', refreshPublishedContent);
+			document.removeEventListener('visibilitychange', refreshPublishedContent);
 			cleanupSections();
 			stopSessionTracking();
 			stopCursorSampling();
