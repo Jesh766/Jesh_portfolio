@@ -125,6 +125,30 @@
 							<a href={featuredProject.demo} target="_blank" rel="noopener noreferrer" class="project-link-btn project-link-btn--demo">Live demo →</a>
 						{/if}
 					</div>
+					<div class="project-preview project-preview--inline mt-8">
+						<div class="project-preview-window overflow-hidden rounded-xl border border-[var(--border-subtle)]">
+							<div class="flex items-center gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
+								<span class="h-2 w-2 rounded-full bg-red-400/70"></span>
+								<span class="h-2 w-2 rounded-full bg-yellow-400/70"></span>
+								<span class="h-2 w-2 rounded-full bg-green-400/70"></span>
+								<span class="ml-3 truncate text-[10px] tracking-[0.2em] uppercase" style="color: var(--text-muted);">farmsathi · home</span>
+							</div>
+							<div class="grid gap-5 px-5 py-6 sm:grid-cols-[1.1fr_0.9fr] sm:items-center sm:px-8 sm:py-7">
+								<div>
+									<p class="text-[10px] tracking-[0.3em] uppercase text-[var(--accent-gold)]">FarmSathi</p>
+									<p class="mt-2 max-w-md font-display text-2xl leading-tight text-[var(--text-primary)]">Share resources. Grow together.</p>
+									<p class="mt-2 max-w-sm text-xs leading-relaxed" style="color: var(--text-secondary);">A simple platform for farmers to find equipment and labour when it matters.</p>
+								</div>
+								<div class="preview-map" aria-hidden="true">
+									<div class="preview-map-line preview-map-line--one"></div>
+									<div class="preview-map-line preview-map-line--two"></div>
+									<div class="preview-map-pin preview-map-pin--one"></div>
+									<div class="preview-map-pin preview-map-pin--two"></div>
+									<div class="preview-map-pin preview-map-pin--three"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="relative mt-5 flex flex-wrap gap-x-6 gap-y-2">
 					{#each featuredProject.metrics ?? [] as metric}
@@ -136,30 +160,6 @@
 				</div>
 			</div>
 
-			<div class="project-preview border-t border-[var(--border-subtle)] p-5 sm:p-8">
-				<div class="project-preview-window overflow-hidden rounded-xl border border-[var(--border-subtle)]">
-					<div class="flex items-center gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
-						<span class="h-2 w-2 rounded-full bg-red-400/70"></span>
-						<span class="h-2 w-2 rounded-full bg-yellow-400/70"></span>
-						<span class="h-2 w-2 rounded-full bg-green-400/70"></span>
-						<span class="ml-3 truncate text-[10px] tracking-[0.2em] uppercase" style="color: var(--text-muted);">farmsathi · home</span>
-					</div>
-					<div class="grid gap-6 px-5 py-8 sm:grid-cols-[1.1fr_0.9fr] sm:items-center sm:px-10 sm:py-10">
-						<div>
-							<p class="text-[10px] tracking-[0.3em] uppercase text-[var(--accent-gold)]">FarmSathi</p>
-							<p class="mt-2 max-w-md font-display text-2xl leading-tight text-[var(--text-primary)] sm:text-3xl">Share resources. Grow together.</p>
-							<p class="mt-3 max-w-sm text-xs leading-relaxed" style="color: var(--text-secondary);">A simple platform for farmers to find equipment and labour when it matters.</p>
-						</div>
-						<div class="preview-map" aria-hidden="true">
-							<div class="preview-map-line preview-map-line--one"></div>
-							<div class="preview-map-line preview-map-line--two"></div>
-							<div class="preview-map-pin preview-map-pin--one"></div>
-							<div class="preview-map-pin preview-map-pin--two"></div>
-							<div class="preview-map-pin preview-map-pin--three"></div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</article>
 
 		<!-- Other projects (from the admin/dashboard) -->
@@ -294,6 +294,10 @@
 			linear-gradient(32deg, transparent 46%, rgba(201, 168, 76, 0.16) 47%, transparent 49%),
 			linear-gradient(148deg, transparent 46%, rgba(201, 168, 76, 0.12) 47%, transparent 49%),
 			rgba(8, 12, 11, 0.5);
+	}
+
+	.project-preview--inline {
+		max-width: 52rem;
 	}
 
 	.preview-map-line {
