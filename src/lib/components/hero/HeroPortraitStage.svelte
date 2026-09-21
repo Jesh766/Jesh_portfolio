@@ -3,8 +3,6 @@
 	import gsap from 'gsap';
 	import HeroScene from './HeroScene.svelte';
 	import HeroPortraitImage from './HeroPortraitImage.svelte';
-	import HeroFloatingCard from './HeroFloatingCard.svelte';
-	import { HERO_FLOATING_CARDS } from '$lib/data/site';
 	import './hero.css';
 
 	let {
@@ -77,15 +75,6 @@
 	<div bind:this={portraitWrap} class="relative z-10 h-full w-full px-[4%] py-[3%]">
 		<HeroPortraitImage {mouse} bind:loaded={portraitLoaded} />
 	</div>
-
-	{#each HERO_FLOATING_CARDS as card}
-		<HeroFloatingCard
-			title={card.title}
-			position={card.position}
-			delay={card.delay}
-			floatDuration={card.floatDuration}
-		/>
-	{/each}
 
 	</div>
 	<div class="hero-portrait-hint" aria-hidden="true">
