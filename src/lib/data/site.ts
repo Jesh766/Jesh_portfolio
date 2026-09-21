@@ -235,6 +235,7 @@ export type Project = {
 	id: string;
 	title: string;
 	tagline: string;
+	image: string;
 	tags: string[];
 	status: string;
 	year: string;
@@ -336,6 +337,7 @@ export const PROJECTS: Project[] = [
 		title: 'FarmSathi',
 		tagline:
 			'A platform enabling farmers to share equipment and labour through a token-based ecosystem.',
+		image: '/projects/farmsathi-preview.svg',
 		tags: ['AgriTech', 'AI', 'Full Stack', 'UX'],
 		status: 'Hackathon Project',
 		year: '2024',

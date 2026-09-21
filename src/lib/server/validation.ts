@@ -202,6 +202,7 @@ export function validatePortfolioContent(value: unknown) {
 						'id',
 						'title',
 						'tagline',
+						'image',
 						'tags',
 						'status',
 						'year',
@@ -213,6 +214,7 @@ export function validatePortfolioContent(value: unknown) {
 					!stringField(item.id, 120) ||
 					!stringField(item.title, 200) ||
 					!stringField(item.tagline, 2000) ||
+					!stringField(item.image, 2048) ||
 					!arrayOfStrings(item.tags, 20, 80) ||
 					!stringField(item.status, 120) ||
 					!stringField(item.year, 20) ||

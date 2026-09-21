@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" role="img" aria-labelledby="title desc">
+  <title id="title">FarmSathi preview placeholder</title>
+  <desc id="desc">Temporary preview image for the FarmSathi project. Replace with the real homepage screenshot.</desc>
+  <rect width="1600" height="800" fill="#171613"/>
+  <rect x="32" y="32" width="1536" height="736" rx="28" fill="#211f19" stroke="#6b5724" stroke-width="2"/>
+  <circle cx="92" cy="92" r="12" fill="#d97777"/>
+  <circle cx="132" cy="92" r="12" fill="#d3ad4f"/>
+  <circle cx="172" cy="92" r="12" fill="#7eb27b"/>
+  <text x="250" y="102" fill="#b6a98b" font-family="Georgia, serif" font-size="24" letter-spacing="6">FARMSATHI · HOME PREVIEW</text>
+  <text x="140" y="340" fill="#d2b86c" font-family="Georgia, serif" font-size="30" letter-spacing="8">FARMSATHI</text>
+  <text x="140" y="430" fill="#f0eadc" font-family="Georgia, serif" font-size="76">Share resources.</text>
+  <text x="140" y="515" fill="#f0eadc" font-family="Georgia, serif" font-size="76">Grow together.</text>
+  <text x="142" y="590" fill="#b6a98b" font-family="Arial, sans-serif" font-size="26">Replace this temporary preview with the real homepage screenshot.</text>
+  <path d="M1020 230 L1430 360 L1120 620 L900 470 Z" fill="none" stroke="#8c702c" stroke-width="4" opacity=".75"/>
+  <circle cx="1080" cy="330" r="15" fill="#d2b86c"/>
+  <circle cx="1270" cy="410" r="15" fill="#d2b86c"/>
+  <circle cx="1130" cy="540" r="15" fill="#d2b86c"/>
+</svg>

@@ -116,6 +116,7 @@
 			id: `project-${Date.now()}`,
 			title: 'New project',
 			tagline: 'Add a short project description.',
+			image: '/projects/project-preview.png',
 			tags: [],
 			status: 'In progress',
 			year: String(new Date().getFullYear()),
@@ -246,6 +247,7 @@
 							<label>Project title<input value={project.title} oninput={(event) => updateProject(index, 'title', event.currentTarget.value)} /></label>
 							<label>Year<input value={project.year} oninput={(event) => updateProject(index, 'year', event.currentTarget.value)} /></label>
 							<label class="wide">Short description<textarea rows="2" oninput={(event) => updateProject(index, 'tagline', event.currentTarget.value)}>{project.tagline}</textarea></label>
+							<label class="wide">Preview image path<input placeholder="/projects/project-preview.png" value={project.image} oninput={(event) => updateProject(index, 'image', event.currentTarget.value)} /></label>
 							<label>GitHub URL<input type="url" placeholder="https://github.com/..." value={project.github} oninput={(event) => updateProject(index, 'github', event.currentTarget.value)} /></label>
 							<label>Live demo URL<input type="url" placeholder="https://..." value={project.demo} oninput={(event) => updateProject(index, 'demo', event.currentTarget.value)} /></label>
 							<label>Status<input value={project.status} oninput={(event) => updateProject(index, 'status', event.currentTarget.value)} /></label>
