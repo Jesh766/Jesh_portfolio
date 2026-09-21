@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <title>Jayshil Thakkar</title>
   <rect width="64" height="64" rx="12" fill="#12110F"/>
-  <path d="M14 18h36M32 18v21c0 7-4 11-10 11-4 0-7-2-9-5" stroke="#F7F3ED" stroke-width="3" stroke-linecap="round"/>
-  <path d="M34 50c3-1 6-3 8-7 2-4 3-9 3-14" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="48" cy="18" r="2" fill="#C9A84C"/>
+  <text x="32" y="42" text-anchor="middle" fill="#F7F3ED" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" letter-spacing="1">JT</text>
+  <rect x="18" y="48" width="28" height="2" rx="1" fill="#C9A84C"/>
 </svg>
