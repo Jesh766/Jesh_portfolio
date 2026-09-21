@@ -355,7 +355,7 @@ export const PROJECTS: Project[] = [
 		tags: ['AgriTech', 'AI', 'Full Stack', 'UX'],
 		status: 'Hackathon Project',
 		year: '2024',
-		github: 'https://github.com/Jesh766/Jesh_portfolio',
+		github: 'https://github.com/Jesh766/Farmsathi',
 		demo: '',
 		metrics: [
 			{ value: '6', label: 'Case chapters' },
