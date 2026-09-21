@@ -349,6 +349,20 @@ export const PROJECTS: Project[] = [
 			{ value: '∞', label: 'Farmer potential' }
 		],
 		featured: true
+	},
+	{
+		id: 'gridtrade',
+		title: 'GridTrade',
+		tagline:
+			'AI-powered P2P renewable energy trading with grid-aware coordination for local solar communities.',
+		image: '/projects/gridtrade-preview.svg',
+		tags: ['AI', 'Energy', 'Full Stack', 'TypeScript'],
+		status: 'AI Energy Platform',
+		year: '2026',
+		github: 'https://github.com/Jesh766/DAU-JESH',
+		demo: '',
+		metrics: [],
+		featured: false
 	}
 ];
 

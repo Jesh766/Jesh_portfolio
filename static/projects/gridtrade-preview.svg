@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" role="img" aria-labelledby="title desc">
+  <title id="title">GridTrade preview placeholder</title>
+  <desc id="desc">Temporary preview image for the GridTrade project. Replace with the real homepage screenshot.</desc>
+  <rect width="1600" height="800" fill="#101719"/>
+  <rect x="32" y="32" width="1536" height="736" rx="28" fill="#172326" stroke="#3d7470" stroke-width="2"/>
+  <circle cx="92" cy="92" r="12" fill="#d97777"/>
+  <circle cx="132" cy="92" r="12" fill="#d3ad4f"/>
+  <circle cx="172" cy="92" r="12" fill="#7eb27b"/>
+  <text x="250" y="102" fill="#91b9b2" font-family="Arial, sans-serif" font-size="24" letter-spacing="6">GRIDTRADE · HOME PREVIEW</text>
+  <text x="140" y="338" fill="#7fd1c2" font-family="Georgia, serif" font-size="30" letter-spacing="8">GRIDTRADE</text>
+  <text x="140" y="430" fill="#e4f0ed" font-family="Georgia, serif" font-size="76">Trade clean energy.</text>
+  <text x="140" y="515" fill="#e4f0ed" font-family="Georgia, serif" font-size="76">Power local futures.</text>
+  <text x="142" y="590" fill="#91b9b2" font-family="Arial, sans-serif" font-size="26">Replace this temporary preview with the real homepage screenshot.</text>
+  <path d="M1000 570 C1110 350 1190 620 1300 320 S1450 420 1510 220" fill="none" stroke="#7fd1c2" stroke-width="8" opacity=".8"/>
+  <path d="M1000 570 C1110 350 1190 620 1300 320 S1450 420 1510 220" fill="none" stroke="#d3ad4f" stroke-width="2" opacity=".9"/>
+  <circle cx="1110" cy="410" r="14" fill="#7fd1c2"/>
+  <circle cx="1300" cy="320" r="14" fill="#d3ad4f"/>
+  <circle cx="1450" cy="330" r="14" fill="#7fd1c2"/>
+</svg>
