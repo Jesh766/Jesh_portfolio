@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FARMSATHI, PROJECTS } from '$lib/data/site';
+	import { PROJECTS } from '$lib/data/site';
 	import { contentState } from '$lib/stores/content.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
@@ -12,12 +12,6 @@
 	let comingCard = $state<HTMLElement | undefined>(undefined);
 
 	const tags = ['AgriTech', 'AI', 'Full Stack', 'UX'];
-	const metrics = [
-		{ value: '6', label: 'Case chapters' },
-		{ value: '1', label: 'Flagship product' },
-		{ value: '∞', label: 'Farmer potential' }
-	];
-
 	const projects = $derived(contentState.projects.length ? contentState.projects : PROJECTS);
 	const featuredIndex = $derived(Math.max(projects.findIndex((p) => p.featured), 0));
 	const featuredProject = $derived(projects[featuredIndex] ?? PROJECTS[0]);
@@ -109,7 +103,7 @@
 						<span class="cert-year-pill" data-editable={`projects.${featuredIndex}.year`}>{featuredProject.year}</span>
 					</div>
 					<h3 class="display-heading mt-3 text-3xl sm:text-4xl md:text-5xl" data-editable={`projects.${featuredIndex}.title`}>{featuredProject.title}</h3>
-					<p class="mt-4 max-w-2xl text-lg leading-relaxed" data-editable={`projects.${featuredIndex}.tagline`} style="color: var(--text-secondary);">
+					<p class="mt-3 line-clamp-1 max-w-xl text-sm leading-relaxed" data-editable={`projects.${featuredIndex}.tagline`} style="color: var(--text-secondary);">
 						{featuredProject.tagline}
 					</p>
 					<div class="mt-4 flex flex-wrap gap-2">
@@ -132,25 +126,39 @@
 						{/if}
 					</div>
 				</div>
-				<div class="relative mt-8 flex gap-8">
-					{#each metrics as m}
-						<div class="text-center">
-							<p class="font-display text-3xl text-[var(--accent-gold)]">{m.value}</p>
-							<p class="mt-1 text-[10px] tracking-widest uppercase" style="color: var(--text-muted);">{m.label}</p>
+				<div class="relative mt-5 flex flex-wrap gap-x-6 gap-y-2">
+					{#each featuredProject.metrics ?? [] as metric}
+						<div class="flex items-baseline gap-2">
+							<p class="font-display text-xl text-[var(--accent-gold)]">{metric.value}</p>
+							<p class="text-[10px] tracking-widest uppercase" style="color: var(--text-muted);">{metric.label}</p>
 						</div>
 					{/each}
 				</div>
 			</div>
 
-			<div class="grid gap-0 md:grid-cols-2">
-				{#each FARMSATHI.sections as block, i}
-					<div
-						class="case-block border-[var(--border-subtle)] p-5 sm:p-8 hover:bg-white/[0.03] md:p-10 {i % 2 === 0 ? 'md:border-r' : ''} border-t"
-					>
-						<p class="text-xs tracking-[0.35em] uppercase text-[var(--accent-gold)]">{block.label}</p>
-						<p class="mt-4 leading-relaxed" style="color: var(--text-secondary);">{block.body}</p>
+			<div class="project-preview border-t border-[var(--border-subtle)] p-5 sm:p-8">
+				<div class="project-preview-window overflow-hidden rounded-xl border border-[var(--border-subtle)]">
+					<div class="flex items-center gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
+						<span class="h-2 w-2 rounded-full bg-red-400/70"></span>
+						<span class="h-2 w-2 rounded-full bg-yellow-400/70"></span>
+						<span class="h-2 w-2 rounded-full bg-green-400/70"></span>
+						<span class="ml-3 truncate text-[10px] tracking-[0.2em] uppercase" style="color: var(--text-muted);">farmsathi · home</span>
 					</div>
-				{/each}
+					<div class="grid gap-6 px-5 py-8 sm:grid-cols-[1.1fr_0.9fr] sm:items-center sm:px-10 sm:py-10">
+						<div>
+							<p class="text-[10px] tracking-[0.3em] uppercase text-[var(--accent-gold)]">FarmSathi</p>
+							<p class="mt-2 max-w-md font-display text-2xl leading-tight text-[var(--text-primary)] sm:text-3xl">Share resources. Grow together.</p>
+							<p class="mt-3 max-w-sm text-xs leading-relaxed" style="color: var(--text-secondary);">A simple platform for farmers to find equipment and labour when it matters.</p>
+						</div>
+						<div class="preview-map" aria-hidden="true">
+							<div class="preview-map-line preview-map-line--one"></div>
+							<div class="preview-map-line preview-map-line--two"></div>
+							<div class="preview-map-pin preview-map-pin--one"></div>
+							<div class="preview-map-pin preview-map-pin--two"></div>
+							<div class="preview-map-pin preview-map-pin--three"></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</article>
 
@@ -164,7 +172,7 @@
 							<span class="cert-year-pill" data-editable={`projects.${index}.year`}>{project.year}</span>
 						</div>
 						<h3 class="display-heading mt-3 text-2xl" data-editable={`projects.${index}.title`}>{project.title}</h3>
-						<p class="mt-3 text-sm leading-relaxed" data-editable={`projects.${index}.tagline`} style="color: var(--text-secondary);">{project.tagline}</p>
+						<p class="mt-2 line-clamp-1 text-xs leading-relaxed" data-editable={`projects.${index}.tagline`} style="color: var(--text-secondary);">{project.tagline}</p>
 						{#if project.tags?.length}
 							<div class="mt-4 flex flex-wrap gap-2">
 								{#each project.tags as tag, tagIndex}
@@ -206,7 +214,7 @@
 							</p>
 						</div>
 						<a
-							href="https://github.com/Jesh766"
+							href="https://github.com/Jesh766/Jesh_portfolio"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="project-link-btn project-link-btn--github flex-shrink-0"
@@ -221,7 +229,7 @@
 		<!-- View All GitHub CTA -->
 		<div class="mt-12 text-center">
 			<a
-				href="https://github.com/Jesh766"
+				href="https://github.com/Jesh766/Jesh_portfolio"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm tracking-wide transition-[border-color,color,box-shadow] duration-300 hover:border-[var(--border-accent)] hover:shadow-[var(--glow-gold)]"
@@ -271,4 +279,51 @@
 	.project-link-btn--demo:hover {
 		background: rgba(201, 168, 76, 0.18);
 	}
+
+	.project-preview-window {
+		background: linear-gradient(135deg, rgba(201, 168, 76, 0.08), rgba(255, 255, 255, 0.02));
+	}
+
+	.preview-map {
+		position: relative;
+		min-height: 8rem;
+		overflow: hidden;
+		border: 1px solid rgba(201, 168, 76, 0.2);
+		border-radius: 0.75rem;
+		background:
+			linear-gradient(32deg, transparent 46%, rgba(201, 168, 76, 0.16) 47%, transparent 49%),
+			linear-gradient(148deg, transparent 46%, rgba(201, 168, 76, 0.12) 47%, transparent 49%),
+			rgba(8, 12, 11, 0.5);
+	}
+
+	.preview-map-line {
+		position: absolute;
+		height: 1px;
+		background: rgba(201, 168, 76, 0.35);
+		transform-origin: left center;
+	}
+
+	.preview-map-line--one {
+		inset: 25% 8% auto 15%;
+		transform: rotate(20deg);
+	}
+
+	.preview-map-line--two {
+		inset: 68% 12% auto 18%;
+		transform: rotate(-25deg);
+	}
+
+	.preview-map-pin {
+		position: absolute;
+		width: 0.6rem;
+		height: 0.6rem;
+		border: 2px solid var(--accent-gold);
+		border-radius: 999px;
+		background: var(--bg-card);
+		box-shadow: 0 0 0 5px rgba(201, 168, 76, 0.12);
+	}
+
+	.preview-map-pin--one { top: 22%; left: 28%; }
+	.preview-map-pin--two { top: 55%; right: 24%; }
+	.preview-map-pin--three { bottom: 14%; left: 48%; }
 </style>

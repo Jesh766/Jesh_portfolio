@@ -39,7 +39,7 @@ export const SITE: SiteConfig = {
 	email: 'jayshilthakkar007@gmail.com',
 	phone: '+91 9173389217',
 	linkedin: 'https://www.linkedin.com/in/jayshil-thakkar',
-	github: 'https://github.com/Jesh766',
+	github: 'https://github.com/Jesh766/Jesh_portfolio',
 	instagram: 'https://www.instagram.com/jesh.766/',
 	whatsapp: 'https://wa.me/919173389217',
 	brand: 'Building intelligent web applications, AI-powered tools, and modern digital experiences.',
@@ -339,7 +339,7 @@ export const PROJECTS: Project[] = [
 		tags: ['AgriTech', 'AI', 'Full Stack', 'UX'],
 		status: 'Hackathon Project',
 		year: '2024',
-		github: 'https://github.com/Jesh766',
+		github: 'https://github.com/Jesh766/Jesh_portfolio',
 		demo: '',
 		metrics: [
 			{ value: '6', label: 'Case chapters' },
